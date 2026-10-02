@@ -92,12 +92,12 @@ describe('dashboard lines', () => {
     const week = dashboardLines(d, 'week', 120).map(l => l.map(s => s.text).join(''))
     expect(week.some(l => l.includes('sau /compact'))).toBe(true)
     expect(week.some(l => l.includes('đổi model sonnet → opus'))).toBe(true)
-    expect(week.some(l => l.includes('theo model') && l.includes('theo project') && l.includes('hạn mức'))).toBe(true)
-    expect(week.some(l => l.includes('distiller') && l.includes('đọc lại 1/1'))).toBe(true)
+    expect(week.some(l => l.includes('Theo model') && l.includes('Theo project') && l.includes('Hạn mức'))).toBe(true)
+    expect(week.some(l => l.includes('Distiller') && l.includes('đọc lại 1/1'))).toBe(true)
     expect(week.some(l => l.includes('dòng không đọc được'))).toBe(true)
     // Under 80 columns the side columns stack.
     const w70 = dashboardLines(d, 'week', 70).map(l => l.map(s => s.text).join(''))
-    expect(w70.some(l => l.includes('theo model') && l.includes('theo project'))).toBe(false)
+    expect(w70.some(l => l.includes('Theo model') && l.includes('Theo project'))).toBe(false)
     // Under 60, totals and cache hit only.
     const w50 = dashboardLines(d, 'week', 50).map(l => l.map(s => s.text).join(''))
     expect(w50.some(l => l.startsWith('cache hit'))).toBe(true)
@@ -150,11 +150,11 @@ describe('/usage-plus', () => {
     for (const surface of ['terminal', 'desktop'] as const) {
       for (const cols of [60, 90, 120]) {
         const ui = await $.ui.mount(PANE(surface, cols))
-        expect(await ui.find({ type: 'Text', text: /tokens\/ngày/ })).toBeDefined()
+        expect(await ui.find({ type: 'Text', text: /Tokens \/ ngày/ })).toBeDefined()
         await ui.press({ key: 'tab-session' })
         expect(await ui.find({ type: 'Text', text: /phiên này · 3 turn/ })).toBeDefined()
         await ui.press({ key: 'tab-month' })
-        expect(await ui.find({ type: 'Text', text: /theo ngày/ })).toBeDefined()
+        expect(await ui.find({ type: 'Text', text: /Theo ngày/ })).toBeDefined()
         await ui.press({ key: 'tab-week' })
         await ui.unmount()
       }

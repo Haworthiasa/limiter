@@ -98,7 +98,7 @@ describe('band v2 in a session', () => {
     const ui = await $.ui.mount(BAND('terminal'))
     // No step was summed: the turn's own total stands in, as one request.
     expect(await ui.find({ type: 'Text', text: '1 req' })).toBeDefined()
-    expect(await ui.find({ type: 'Button', label: '[-]' } as any)).toBeDefined()
+    expect(await ui.find({ type: 'Button', label: '−' } as any)).toBeDefined()
     await ui.unmount()
   })
 })

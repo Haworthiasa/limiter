@@ -19,6 +19,7 @@ const WEEKDAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
 const dim = (text: string): Segment => ({ text, dim: true })
 const plain = (text: string): Segment => ({ text })
 const blank: Line = []
+const rule = (cols: number): Line => [dim('─'.repeat(Math.max(0, cols)))]
 
 export function usd(n: number): string {
   const a = Math.abs(n)
@@ -48,7 +49,7 @@ function hitOf(rows: readonly DayRow[]): number | undefined {
 
 function legend(): Line {
   return [
-    dim('tokens/ngày   '),
+    dim('Tokens / ngày   '),
     { text: '█', color: COLORS.read },
     dim(' cache read  '),
     { text: '█', color: COLORS.write },
@@ -63,7 +64,7 @@ function legend(): Line {
 function barRows(rows: readonly { label: string; row: DayRow }[], cols: number): Line[] {
   const max = Math.max(1, ...rows.map(r => totalOf(r.row)))
   const labelW = Math.max(...rows.map(r => r.label.length))
-  const cells = Math.max(4, cols - labelW - 9)
+  const cells = Math.max(4, cols - labelW - 11)
   return rows.map(({ label, row }) => {
     const n = totalOf(row)
     const bar = stacked(
@@ -75,15 +76,17 @@ function barRows(rows: readonly { label: string; row: DayRow }[], cols: number):
       ],
       Math.round((n / max) * cells),
     )
-    return [dim(label.padEnd(labelW + 1)), ...bar, plain(' '.repeat(cells - width(bar) + 1)), plain(n > 0 ? fmtTokens(n).padStart(6) : '     -')]
+    if (n === 0) return [plain('  '), dim(label.padEnd(labelW + 2)), dim('·')]
+    return [plain('  '), dim(label.padEnd(labelW + 2)), ...bar, plain(' '.repeat(cells - width(bar) + 1)), plain(fmtTokens(n).padStart(6))]
   })
 }
 
 function hitLine(rows: readonly DayRow[], label: string): Line {
   const hit = hitOf(rows)
   const saved = rows.reduce((n, r) => n + r.savings, 0)
-  const line: Line = [dim('cache hit  '), { text: spark(rows.map(r => r.hit), 1), color: 'green' }]
-  if (hit !== undefined) line.push(dim(`   ${label} `), { text: pct(hit), color: cacheColor(hit * 100) })
+  const line: Line = [dim('Cache hit  ')]
+  if (hit !== undefined) line.push({ text: pct(hit), color: cacheColor(hit * 100) }, dim(` (${label})  `))
+  line.push({ text: spark(rows.map(r => r.hit), 1), color: 'green' })
   if (saved !== 0) line.push(dim('   tiết kiệm ≈ '), { text: usd(saved), color: saved >= 0 ? 'green' : 'red' }, dim(' so với không cache'))
   return line
 }
@@ -125,7 +128,7 @@ function bustLines(busts: readonly BustEvent[], title: string, cols: number, wit
 }
 
 function shareLines(title: string, list: readonly Share[], w: number): Line[] {
-  const out: Line[] = [[dim(title)]]
+  const out: Line[] = [[dim(title[0]!.toUpperCase() + title.slice(1))]]
   const nameW = Math.min(10, Math.max(4, ...list.map(s => s.name.length)))
   const cells = Math.max(3, Math.min(6, w - nameW - 7))
   for (const s of list) {
@@ -137,7 +140,7 @@ function shareLines(title: string, list: readonly Share[], w: number): Line[] {
 
 function limitLines(d: DashData): Line[] {
   const l = d.limits
-  const out: Line[] = [[dim('hạn mức (lịch sử)')]]
+  const out: Line[] = [[dim('Hạn mức (lịch sử)')]]
   if (l.five.length > 0) {
     const line: Line = [dim('5h '), { text: spark(l.five, 100), color: 'yellow' }]
     if (l.fivePeak) line.push(dim(` đỉnh ${Math.round(l.fivePeak.pct)}% ${clock(l.fivePeak.ts).split(' ')[0]}`))
@@ -155,10 +158,10 @@ function limitLines(d: DashData): Line[] {
 }
 
 function distillLines(s: DistillSummary): Line[] {
-  if (s.count === 0) return [[dim('distiller  chưa chưng cất lần nào')]]
+  if (s.count === 0) return [[dim('Distiller  chưa chưng cất lần nào')]]
   return [
     [
-      dim('distiller  '),
+      dim('Distiller  '),
       plain(`${s.count} lần · -${fmtTokens(s.cut)} ký tự · đọc lại ${s.reread}/${s.count} (${pct(s.reread / s.count)})`),
     ],
     s.byKind.flatMap((k, i) => [...(i > 0 ? [plain('  ')] : []), dim(`${k.kind} `), plain(`-${fmtTokens(k.cut)}`)]),
@@ -198,13 +201,16 @@ function weekTab(d: DashData, cols: number): Line[] {
   return [
     ...notices(d),
     legend(),
+    blank,
     ...barRows(rows.map(r => ({ label: weekdayOf(r.date), row: r })), cols),
+    blank,
     hitLine(rows, 'tuần'),
+    ...bustLines(d.busts, 'Cache bust gần đây', cols),
     blank,
-    ...bustLines(d.busts, 'cache bust gần đây', cols),
-    blank,
+    rule(cols),
     ...sideBySide(d, d.week.byModel, d.week.byProject, cols),
     blank,
+    rule(cols),
     ...distillLines(d.distillWeek),
   ]
 }
@@ -237,12 +243,16 @@ function monthTab(d: DashData, cols: number): Line[] {
   return [
     ...notices(d),
     legend(),
+    blank,
     ...barRows(weeks, cols),
-    [dim('theo ngày  '), { text: spark(rows.map(totalOf)), color: 'cyan' }],
+    blank,
+    [dim('Theo ngày  '), { text: spark(rows.map(totalOf)), color: 'cyan' }],
     hitLine(rows, 'tháng'),
     blank,
+    rule(cols),
     ...sideBySide(d, d.month.byModel, d.month.byProject, cols),
     blank,
+    rule(cols),
     ...distillLines(d.distillMonth),
   ]
 }
@@ -265,7 +275,7 @@ function sessionTab(d: DashData, cols: number): Line[] {
   }
   const top = [...turns].sort((a, b) => b.cost - a.cost).slice(0, 3)
   const topLine: Line = [dim('tốn nhất: '), plain(top.map(t => `${clock(t.ts, false)} ~${usd(t.cost)}`).join(' · '))]
-  return [head, blank, ...table, blank, topLine, blank, ...bustLines(d.session.busts, 'cache bust trong phiên', cols, false)]
+  return [head, blank, ...table, blank, topLine, blank, ...bustLines(d.session.busts, 'Cache bust trong phiên', cols, false)]
 }
 
 /** Every line of a tab, none wider than `cols`. */

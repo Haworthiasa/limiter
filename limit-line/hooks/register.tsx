@@ -5,7 +5,7 @@ import type { CompactMark, DayAgg, DistillEvent, LastTurn, MeasureSnapshot, Read
 import { bandLine, extrasOf, shortModel, turnLine } from './band'
 import { buildDash, lastDates } from './dashdata'
 import type { DashData } from './dashdata'
-import { SUBTITLE, dashboardLines } from './dashboard'
+import { dashboardLines } from './dashboard'
 import type { Tab } from './dashboard'
 import { basename, byDay, shouldSnapshot, toRecord } from './ledger'
 import { KINDS, addReading, fullAt, warnLevel } from './limits'
@@ -350,7 +350,7 @@ export const register: Register = on => {
     }
     const computed = await loadDash($)
     await update($, dash, () => computed)
-    const opened = await $.ui.open({ id: PANE_ID, title: 'usage-plus', focus: true, closeOnEscape: true })
+    const opened = await $.ui.open({ id: PANE_ID, title: 'usage-plus', focus: true, closeOnEscape: true, rows: 30 })
     if (!opened.isPlaced) return { text: `usage-plus: ${opened.reason}` }
     // A redraw for a pane that was already open.
     $.ui.invalidate('ui.render')
@@ -367,19 +367,19 @@ export const register: Register = on => {
       <Box flexDirection="column">
         <Box flexDirection="row">
           {TABS.map(t => (
-            <Button
-              key={`tab-${t.tab}`}
-              label={tab === t.tab ? `[${t.key} ${t.label}]` : ` ${t.key} ${t.label} `}
-              hotkey={t.key}
-              plain
-              dimColor={tab !== t.tab}
-              onPress={() => void update($, dashTab, () => t.tab)}
-            />
+            <Box key={`tab-box-${t.tab}`} marginRight={3}>
+              <Button
+                key={`tab-${t.tab}`}
+                label={t.label}
+                hotkey={t.key}
+                plain
+                dimColor={tab !== t.tab}
+                onPress={() => void update($, dashTab, () => t.tab)}
+              />
+            </Box>
           ))}
-          <Box flexGrow={1} />
-          {cols >= 60 && <Text dimColor>{SUBTITLE[tab]} </Text>}
-          <Button key="close" label="[x]" hotkey="x" plain role="dismiss" onPress={() => void $.ui.close({ id: PANE_ID })} />
         </Box>
+        <Text dimColor wrap="truncate">{'─'.repeat(cols)}</Text>
         <Text> </Text>
         {lines.map((line, i) => (
           <Box key={`l${i}`} flexDirection="row">
@@ -435,7 +435,7 @@ export const register: Register = on => {
           </Box>
           <Button
             key="expand"
-            label={isExpanded ? '[-]' : '[+]'}
+            label={isExpanded ? '−' : '+'}
             plain
             dimColor
             onPress={() => void toggleExpanded($)}
