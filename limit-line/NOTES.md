@@ -161,3 +161,30 @@ engine refuses a clash with a built-in. The first `$.command.register` in P1/P2 
   `~/.claude/settings.json`). This session also hot-loads the dev copy under `~/.claude/dev-mods/…`.
   Two loaded plugins with the same name: decide which one stays during development (P5 swaps the
   marketplace to `~/dev/my-mods`).
+
+## P1–P3 findings (2026-10-02)
+
+- **Engine rules for a module:** `$` is followed only into functions of the same file (passing
+  it to an imported helper fails validation); an atom must be declared in the file that reads
+  or writes it; an event without a matcher may be hooked once per plugin (`session.start` is
+  in `register.tsx` only). So: pure logic in its own modules, `$` code in `register.tsx` and
+  `distiller.ts`, each with its own small file helpers and atom declarations.
+- **`.ts` imports:** `import … from './x.ts'` works in the engine and in Node 24 alike, so
+  `hooks/distill/*` and `hooks/metrics.ts` are shared by the mod, the wrapper CLI and the indexer.
+  `tsconfig.json` adds `allowImportingTsExtensions`.
+- **Tests:** a test's `$` has no `fs`/`store`; files are mocked by hooking `fs.read/write/exists`
+  beneath the plugin. A test cannot import a `.log`: `scripts/build-fixtures.mjs` embeds the logs in
+  `tests/fixtures/logs.gen.ts`. The indexer is tested with `node --test tests/indexer.node.mjs`.
+- **Advisor sub-calls:** an assistant entry's `usage.iterations[]` can hold an `advisor_message`
+  whose tokens (140k input on one request here) are **not** in the top-level usage. The indexer adds
+  every non-`message` iteration to the day totals (never to busts). ccusage does the same.
+  Live `turn.step` usage is the top-level usage only: the live ledger and the band leave advisor
+  calls out.
+- **ccusage check (P3):** `npx ccusage@latest daily --json --timezone Asia/Bangkok`, Claude models only
+  (ccusage also reads codex/hermes logs on this machine):
+  - 2026-10-01: input 32, output 18,919, cache read 872,783, cache write 91,317. **Identical (0.000%).**
+  - 2026-10-02: 0.005% apart. One more request landed between the two runs.
+  Only two days of local history exist; repeat once there are seven.
+- **Indexer speed:** full rebuild of 7 files about 25 ms; an incremental run with nothing new 1 ms.
+- **Wrapper, end to end:** a real failing pytest wrapped gave exit code 1, 41,560 → 3,417 chars,
+  and the log renamed to `…-pytest.log`.

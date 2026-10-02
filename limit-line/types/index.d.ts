@@ -32,6 +32,28 @@ export type LastTurn = TurnAcc & {
   window?: number
 }
 
+/** One model request as the live ledger keeps it (PLAN §4). */
+export type RequestRecord = {
+  ts: number
+  sessionId: string
+  /** basename of the session's cwd */
+  project: string
+  model: string
+  input: number
+  output: number
+  cacheRead: number
+  cacheWrite: number
+  cacheWrite1h?: number
+  turnId?: string
+  isSubagent: boolean
+  source: 'live' | 'jsonl'
+}
+
+export type MeasureSnapshot = { ts: number; fiveHourPct: number; weekPct: number; resetsAt5h?: number; resetsAtWeek?: number }
+
+/** A compaction that happened: where a later cold request's bust comes from. */
+export type CompactMark = { ts: number; sessionId: string; trigger: string }
+
 export type DistillKind = 'pytest' | 'cuda' | 'docker' | 'train' | 'generic'
 
 /** One distillation: sizes and where the whole output went, never the output itself. */
@@ -57,6 +79,8 @@ declare module 'claude-code' {
       expanded: boolean
       distillOn: boolean
       distEvents: DistillEvent[]
+      ledgerBuf: RequestRecord[]
+      lastSnap: MeasureSnapshot | null
     }
   }
 }

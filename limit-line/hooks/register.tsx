@@ -1,12 +1,14 @@
 import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register, SessionRateLimit, SessionContextUsage } from 'claude-code'
 
-import type { LastTurn, Reading, TurnAcc, View, Win } from '../types'
+import type { CompactMark, LastTurn, MeasureSnapshot, Reading, RequestRecord, TurnAcc, View, Win } from '../types'
 import { bandLine, extrasOf, turnLine } from './band'
+import { basename, byDay, shouldSnapshot, toRecord } from './ledger'
 import { KINDS, addReading, fullAt, warnLevel } from './limits'
 import type { Kind, Segment } from './limits'
 import { OFF_KEY, registerDistiller } from './distiller'
 import { costOf } from './metrics'
+import { dataDir, monthKey, TZ_OFFSET_MIN } from './paths'
 import { addStep, pushHistory } from './turnstats'
 
 const view = atom({ plugin: 'limit-line', key: 'view' } as const, { now: 0 } as View)
@@ -17,6 +19,9 @@ const ctxHistory = atom({ plugin: 'limit-line', key: 'ctxHistory' } as const, []
 const distSession = atom({ plugin: 'limit-line', key: 'distSession' } as const, 0)
 const expanded = atom({ plugin: 'limit-line', key: 'expanded' } as const, false)
 const distillOn = atom({ plugin: 'limit-line', key: 'distillOn' } as const, true)
+// Requests not yet written to the day's ledger file.
+const ledgerBuf = atom({ plugin: 'limit-line', key: 'ledgerBuf' } as const, [] as RequestRecord[])
+const lastSnap = atom({ plugin: 'limit-line', key: 'lastSnap' } as const, null as MeasureSnapshot | null)
 
 // Remembered across sessions; $.state holds the live value.
 const EXPANDED_KEY = 'band.expanded'
@@ -31,6 +36,34 @@ const LABEL: Record<Kind, string> = { five_hour: 'Hạn mức 5 giờ', seven_da
 
 function isKind(kind: string): kind is Kind {
   return kind in KINDS
+}
+
+// $ goes into functions of this file only (the engine follows it no further).
+async function dataPath($: EngineInterface, rel: string): Promise<string> {
+  const home = await $.env.get('HOME')
+  if (!home) throw new Error('HOME is not set')
+  return `${dataDir(home)}/${rel}`
+}
+
+async function appendJson<T>($: EngineInterface, path: string, items: readonly T[]): Promise<void> {
+  if (items.length === 0) return
+  let list: T[] = []
+  try {
+    list = JSON.parse(await $.fs.read(path)) as T[]
+  } catch {
+    // A new file.
+  }
+  await $.fs.write(path, JSON.stringify([...list, ...items]))
+}
+
+/** Writes the buffered requests to their day files. */
+async function flushLedger($: EngineInterface): Promise<void> {
+  const buf = await read($, ledgerBuf)
+  if (buf.length === 0) return
+  await update($, ledgerBuf, () => [])
+  for (const [day, records] of byDay(buf)) {
+    await appendJson($, await dataPath($, `ledger/${day}.json`), records)
+  }
 }
 
 async function toggleExpanded($: EngineInterface): Promise<boolean> {
@@ -148,6 +181,39 @@ export const register: Register = on => {
   on('session.measure', async ($, e, next) => {
     const result = await next(e)
     await measure($, e.rateLimits, e.context)
+    try {
+      const five = e.rateLimits.find(r => r.kind === 'five_hour')
+      const week = e.rateLimits.find(r => r.kind === 'seven_day')
+      if (five || week) {
+        const ts = await $.clock.now()
+        const snap: MeasureSnapshot = { ts, fiveHourPct: five?.percentUsed ?? 0, weekPct: week?.percentUsed ?? 0 }
+        const r5 = five?.resetsAt ? Date.parse(five.resetsAt) : NaN
+        const rw = week?.resetsAt ? Date.parse(week.resetsAt) : NaN
+        if (!Number.isNaN(r5)) snap.resetsAt5h = r5
+        if (!Number.isNaN(rw)) snap.resetsAtWeek = rw
+        if (shouldSnapshot(snap, await read($, lastSnap))) {
+          await update($, lastSnap, () => snap)
+          await appendJson($, await dataPath($, `measure/${monthKey(ts, TZ_OFFSET_MIN)}.json`), [snap])
+        }
+      }
+    } catch {
+      // History misses one reading.
+    }
+    return result
+  })
+
+  // A compaction that went through marks the session, for the bust it causes.
+  on('session.compact', async ($, e, next) => {
+    const result = await next(e)
+    try {
+      if (e.trigger !== 'precompute' && e.agentId === undefined && !('skip' in result && result.skip !== undefined)) {
+        const ts = await $.clock.now()
+        const mark: CompactMark = { ts, sessionId: await $.session.id(), trigger: e.trigger }
+        await appendJson($, await dataPath($, `compact/${monthKey(ts, TZ_OFFSET_MIN)}.json`), [mark])
+      }
+    } catch {
+      // The bust will read as unknown.
+    }
     return result
   })
 
@@ -159,11 +225,32 @@ export const register: Register = on => {
     } catch {
       // The band misses one request; the turn goes on.
     }
+    try {
+      // The ledger keeps subagents' requests too, marked.
+      const usage = result.usage
+      if (usage !== null) {
+        const record = toRecord(usage, {
+          ts: await $.clock.now(),
+          sessionId: await $.session.id(),
+          project: basename(await $.session.cwd()),
+          turnId: e.turnId,
+          ...(e.agentId !== undefined ? { agentId: e.agentId } : {}),
+        })
+        await update($, ledgerBuf, buf => [...buf, record])
+      }
+    } catch {
+      // The ledger misses one request; the indexer still has it from the transcript.
+    }
     return result
   })
 
   on('turn.complete', async ($, e, next) => {
     const result = await next(e)
+    try {
+      await flushLedger($)
+    } catch {
+      // The buffer waits for the next turn.
+    }
     if (e.agentId !== undefined) return result
     try {
       // When no step was summed (a hook above answered them), the turn's own total stands in.
