@@ -32,6 +32,19 @@ export type LastTurn = TurnAcc & {
   window?: number
 }
 
+export type DistillKind = 'pytest' | 'cuda' | 'docker' | 'train' | 'generic'
+
+/** One distillation: sizes and where the whole output went, never the output itself. */
+export type DistillEvent = {
+  ts: number
+  sessionId: string
+  kind: DistillKind
+  rawChars: number
+  outChars: number
+  logPath: string
+  reread: boolean
+}
+
 declare module 'claude-code' {
   interface PluginState {
     'limit-line': {
@@ -42,6 +55,8 @@ declare module 'claude-code' {
       ctxHistory: number[]
       distSession: number
       expanded: boolean
+      distillOn: boolean
+      distEvents: DistillEvent[]
     }
   }
 }

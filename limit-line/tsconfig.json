@@ -1,0 +1,7 @@
+{
+  "extends": "./.claude-plugin/types/tsconfig.json",
+  "compilerOptions": { "allowImportingTsExtensions": true },
+  "include": ["hooks", "types", "tests"],
+  // The wrapper's CLI runs under Node, outside the engine's types.
+  "exclude": ["hooks/distill/cli.ts"]
+}

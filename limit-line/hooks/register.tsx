@@ -5,6 +5,7 @@ import type { LastTurn, Reading, TurnAcc, View, Win } from '../types'
 import { bandLine, extrasOf, turnLine } from './band'
 import { KINDS, addReading, fullAt, warnLevel } from './limits'
 import type { Kind, Segment } from './limits'
+import { OFF_KEY, registerDistiller } from './distiller'
 import { costOf } from './metrics'
 import { addStep, pushHistory } from './turnstats'
 
@@ -15,6 +16,7 @@ const lastTurn = atom({ plugin: 'limit-line', key: 'lastTurn' } as const, null a
 const ctxHistory = atom({ plugin: 'limit-line', key: 'ctxHistory' } as const, [] as number[])
 const distSession = atom({ plugin: 'limit-line', key: 'distSession' } as const, 0)
 const expanded = atom({ plugin: 'limit-line', key: 'expanded' } as const, false)
+const distillOn = atom({ plugin: 'limit-line', key: 'distillOn' } as const, true)
 
 // Remembered across sessions; $.state holds the live value.
 const EXPANDED_KEY = 'band.expanded'
@@ -95,6 +97,8 @@ async function measure(
 }
 
 export const register: Register = on => {
+  registerDistiller(on)
+
   on('session.start', async ($, e, next) => {
     const result = await next(e)
     // The readout first: a failure registering the command must not cost it.
@@ -117,6 +121,22 @@ export const register: Register = on => {
       })
     } catch {
       // The line still draws; only the toggle is missing.
+    }
+    try {
+      await update($, distillOn, () => true)
+      if ((await $.store.get(OFF_KEY)) === true) await update($, distillOn, () => false)
+    } catch {
+      // The distiller is on by default.
+    }
+    try {
+      await $.command.register({ name: 'distill', description: 'Distiller: /distill on | off | stats | last' })
+    } catch {
+      // A clash with another command's name: the fallback name (NOTES.md).
+      try {
+        await $.command.register({ name: 'distill-x', description: 'Distiller: on | off | stats | last' })
+      } catch {
+        // No command; the distiller still runs.
+      }
     }
     // Keep the countdowns moving while nobody types.
     $.clock.every(60_000, () => {
