@@ -55,18 +55,14 @@ describe('pure helpers', () => {
     }
     const text = (cols: number) => layout(view, cols, 420).map(s => s.text).join('')
     const wide = text(200)
-    expect(wide).toContain('██████░░░░')
-    expect(wide).toContain('↻1h23m')
-    expect(wide).toContain('⚠~2h05m')
-    expect(wide).toContain('↻T2 10:00')
-    expect(wide).toContain('ctx ▕████░░░░░░▏ 41%')
-    expect(wide.length).toBeLessThanOrEqual(100)
-    const mid = text(80)
-    expect(mid.length).toBeLessThanOrEqual(80)
+    expect(wide).toBe('5h ████░░ 62% 1h23m !2h05m | wk █░░░░░ 18% T2 10:00 | ctx ██░░░░ 41%')
+    expect(wide.length).toBeLessThanOrEqual(75)
+    const mid = text(60)
+    expect(mid.length).toBeLessThanOrEqual(60)
     expect(mid).not.toContain('T2')
-    expect(mid).toContain('▕████░░▏')
-    const narrow = text(60)
-    expect(narrow).toBe('5h 62% ↻1h23m │ wk 18% │ ctx 41%')
+    expect(mid).toContain('5h ██░░ 62%')
+    const narrow = text(45)
+    expect(narrow).toBe('5h 62% 1h23m | wk 18% | ctx 41%')
   })
 })
 
@@ -98,14 +94,14 @@ describe('in a session', () => {
       expect(five?.props.color).toBe('yellow')
       expect((await ui.find({ type: 'Text', text: '18%' }))?.props.color).toBe('green')
       expect(await ui.find({ type: 'Text', text: '41%' })).toBeDefined()
-      expect(await ui.find({ type: 'Text', text: /↻1h23m/ })).toBeDefined()
+      expect(await ui.find({ type: 'Text', text: /1h23m/ })).toBeDefined()
       await ui.unmount()
     }
 
     // The countdown moves on its own.
     const ui = await $.ui.mount(BAND('terminal'))
     await clock.advance(10 * MIN)
-    expect(await ui.find({ type: 'Text', text: /↻1h13m/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /1h13m/ })).toBeDefined()
     await ui.unmount()
   })
 

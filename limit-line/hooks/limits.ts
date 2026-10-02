@@ -82,12 +82,12 @@ export function warnLevel(pct: number): 0 | 80 | 95 {
 type Tier = { cells: number; weekReset: boolean; eta: boolean }
 
 const TIERS: Tier[] = [
-  { cells: 10, weekReset: true, eta: true },
-  { cells: 6, weekReset: false, eta: true },
+  { cells: 6, weekReset: true, eta: true },
+  { cells: 4, weekReset: false, eta: true },
   { cells: 0, weekReset: false, eta: false },
 ]
 
-const SEP: Segment = { text: ' │ ', dim: true }
+const SEP: Segment = { text: ' | ', dim: true }
 
 function windowSegments(
   label: string,
@@ -100,14 +100,14 @@ function windowSegments(
   const color = colorOf(win.pct)
   const out: Segment[] = [{ text: `${label} `, dim: true }]
   if (tier.cells > 0) {
-    out.push({ text: '▕', dim: true }, { text: bar(win.pct, tier.cells), color }, { text: '▏ ', dim: true })
+    out.push({ text: `${bar(win.pct, tier.cells)} `, color })
   }
   out.push({ text: `${Math.round(win.pct)}%`, color })
   if (showReset && win.resetsAt !== undefined) {
-    out.push({ text: ` ↻${resetText(win.resetsAt)}`, dim: true })
+    out.push({ text: ` ${resetText(win.resetsAt)}`, dim: true })
   }
   if (tier.eta && win.fullAt !== undefined && win.fullAt > now) {
-    out.push({ text: ` ⚠~${duration(win.fullAt - now)}`, color: 'red' })
+    out.push({ text: ` !${duration(win.fullAt - now)}`, color: 'red' })
   }
   return out
 }
