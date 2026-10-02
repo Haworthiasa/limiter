@@ -1,0 +1,7 @@
+{
+  "name": "limit-line",
+  "version": "0.1.0",
+  "description": "One line above the prompt: 5-hour and weekly limits with bars, reset countdowns, a fill forecast and context usage.",
+  "author": { "name": "bosshadabest" },
+  "types": "./types/index.d.ts"
+}

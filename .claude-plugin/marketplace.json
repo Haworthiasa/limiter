@@ -1,0 +1,5 @@
+{
+  "name": "my-mods",
+  "owner": { "name": "bosshadabest" },
+  "plugins": [{ "name": "limit-line", "source": "./limit-line", "description": "5h / weekly limits, reset countdowns, forecast and context in one line above the prompt" }]
+}
