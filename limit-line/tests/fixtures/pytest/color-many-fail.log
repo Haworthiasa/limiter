@@ -1,0 +1,1205 @@
+[1m============================= test session starts ==============================[0m
+platform linux -- Python 3.14.4, pytest-9.0.2, pluggy-1.6.0
+cachedir: /home/user/pyproj/.pytest_cache
+rootdir: /home/user/pyproj
+plugins: typeguard-4.4.4
+collected 133 items
+
+tests/test_account.py [32m.[0m[32m.[0m[31mF[0m[31mF[0m[31mE[0m[32m.[0m[31m                                             [  4%][0m
+tests/test_config.py [31mF[0m[31mF[0m[31m                                                  [  6%][0m
+tests/test_normalize.py [31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[32m.[0m[31m                       [ 25%][0m
+tests/test_ratio.py [32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31mF[0m[31m              [ 54%][0m
+tests/test_smoke.py [32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[31m [ 93%]
+[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[31m                                                                 [100%][0m
+
+==================================== ERRORS ====================================
+[31m[1m________________________ ERROR at setup of test_history ________________________[0m
+
+    [0m[37m@pytest[39;49;00m.fixture[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mbroken_db[39;49;00m():[90m[39;49;00m
+>       [94mraise[39;49;00m [96mConnectionError[39;49;00m([33m"[39;49;00m[33mdatabase at [39;49;00m[33m'[39;49;00m[33mlocalhost:5432[39;49;00m[33m'[39;49;00m[33m refused the connection[39;49;00m[33m"[39;49;00m)[90m[39;49;00m
+[1m[31mE       ConnectionError: database at 'localhost:5432' refused the connection[0m
+
+[1m[31mtests/test_account.py[0m:7: ConnectionError
+=================================== FAILURES ===================================
+[31m[1m______________________________ test_withdraw[500] ______________________________[0m
+
+amount = 500
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mamount[39;49;00m[33m"[39;49;00m, [[94m5[39;49;00m, [94m50[39;49;00m, [94m500[39;49;00m, [94m5000[39;49;00m])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_withdraw[39;49;00m(amount):[90m[39;49;00m
+        acct = Account([94m100[39;49;00m)[90m[39;49;00m
+>       [94massert[39;49;00m acct.withdraw(amount) == [94m100[39;49;00m - amount[90m[39;49;00m
+               ^^^^^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_account.py[0m:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <mathlib.Account object at 0x7964ed25f610>, amount = 500
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mwithdraw[39;49;00m([96mself[39;49;00m, amount):[90m[39;49;00m
+        [94mif[39;49;00m amount > [96mself[39;49;00m.balance:[90m[39;49;00m
+>           [94mraise[39;49;00m [96mValueError[39;49;00m([33mf[39;49;00m[33m"[39;49;00m[33minsufficient funds: [39;49;00m[33m{[39;49;00m[96mself[39;49;00m.balance[33m}[39;49;00m[33m < [39;49;00m[33m{[39;49;00mamount[33m}[39;49;00m[33m"[39;49;00m)[90m[39;49;00m
+[1m[31mE           ValueError: insufficient funds: 100 < 500[0m
+
+[1m[31mmathlib.py[0m:25: ValueError
+[31m[1m_____________________________ test_withdraw[5000] ______________________________[0m
+
+amount = 5000
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mamount[39;49;00m[33m"[39;49;00m, [[94m5[39;49;00m, [94m50[39;49;00m, [94m500[39;49;00m, [94m5000[39;49;00m])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_withdraw[39;49;00m(amount):[90m[39;49;00m
+        acct = Account([94m100[39;49;00m)[90m[39;49;00m
+>       [94massert[39;49;00m acct.withdraw(amount) == [94m100[39;49;00m - amount[90m[39;49;00m
+               ^^^^^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_account.py[0m:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <mathlib.Account object at 0x7964ed24f6f0>, amount = 5000
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mwithdraw[39;49;00m([96mself[39;49;00m, amount):[90m[39;49;00m
+        [94mif[39;49;00m amount > [96mself[39;49;00m.balance:[90m[39;49;00m
+>           [94mraise[39;49;00m [96mValueError[39;49;00m([33mf[39;49;00m[33m"[39;49;00m[33minsufficient funds: [39;49;00m[33m{[39;49;00m[96mself[39;49;00m.balance[33m}[39;49;00m[33m < [39;49;00m[33m{[39;49;00mamount[33m}[39;49;00m[33m"[39;49;00m)[90m[39;49;00m
+[1m[31mE           ValueError: insufficient funds: 100 < 5000[0m
+
+[1m[31mmathlib.py[0m:25: ValueError
+[31m[1m_____________________________ test_loads_defaults ______________________________[0m
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mtest_loads_defaults[39;49;00m():[90m[39;49;00m
+>       [94massert[39;49;00m load_config([33m"[39;49;00m[33mconfig/defaults.json[39;49;00m[33m"[39;49;00m)[[33m"[39;49;00m[33mretries[39;49;00m[33m"[39;49;00m] == [94m3[39;49;00m[90m[39;49;00m
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_config.py[0m:5: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = 'config/defaults.json'
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mload_config[39;49;00m(path):[90m[39;49;00m
+>       [94mwith[39;49;00m [96mopen[39;49;00m(path) [94mas[39;49;00m f:[90m[39;49;00m
+             ^^^^^^^^^^[90m[39;49;00m
+[1m[31mE       FileNotFoundError: [Errno 2] No such file or directory: 'config/defaults.json'[0m
+
+[1m[31mmathlib.py[0m:10: FileNotFoundError
+[31m[1m_____________________________ test_loads_override ______________________________[0m
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mtest_loads_override[39;49;00m():[90m[39;49;00m
+>       cfg = load_config([33m"[39;49;00m[33mconfig/override.json[39;49;00m[33m"[39;49;00m)[90m[39;49;00m
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_config.py[0m:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = 'config/override.json'
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mload_config[39;49;00m(path):[90m[39;49;00m
+>       [94mwith[39;49;00m [96mopen[39;49;00m(path) [94mas[39;49;00m f:[90m[39;49;00m
+             ^^^^^^^^^^[90m[39;49;00m
+[1m[31mE       FileNotFoundError: [Errno 2] No such file or directory: 'config/override.json'[0m
+
+[1m[31mmathlib.py[0m:10: FileNotFoundError
+[31m[1m_____________________________ test_sums_to_one[0] ______________________________[0m
+
+n = 0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+[1m[31mE       assert 0 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 0[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_normalize.py[0m:8: AssertionError
+[31m[1m_____________________________ test_sums_to_one[1] ______________________________[0m
+
+n = 1
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[2] ______________________________[0m
+
+n = 2
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[3] ______________________________[0m
+
+n = 3
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[4] ______________________________[0m
+
+n = 4
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[5] ______________________________[0m
+
+n = 5
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[6] ______________________________[0m
+
+n = 6
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[7] ______________________________[0m
+
+n = 7
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[8] ______________________________[0m
+
+n = 8
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[9] ______________________________[0m
+
+n = 9
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[10] _____________________________[0m
+
+n = 10
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[11] _____________________________[0m
+
+n = 11
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[12] _____________________________[0m
+
+n = 12
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[13] _____________________________[0m
+
+n = 13
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[14] _____________________________[0m
+
+n = 14
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[15] _____________________________[0m
+
+n = 15
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[16] _____________________________[0m
+
+n = 16
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[17] _____________________________[0m
+
+n = 17
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[18] _____________________________[0m
+
+n = 18
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[19] _____________________________[0m
+
+n = 19
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[20] _____________________________[0m
+
+n = 20
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[21] _____________________________[0m
+
+n = 21
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[22] _____________________________[0m
+
+n = 22
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[23] _____________________________[0m
+
+n = 23
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m_____________________________ test_sums_to_one[24] _____________________________[0m
+
+n = 24
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mn[39;49;00m[33m"[39;49;00m, [96mrange[39;49;00m([94m25[39;49;00m))[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_sums_to_one[39;49;00m(n):[90m[39;49;00m
+        values = [[94m0[39;49;00m] * n[90m[39;49;00m
+>       [94massert[39;49;00m [96msum[39;49;00m(normalize(values)) == pytest.approx([94m1.0[39;49;00m)[90m[39;49;00m
+                   ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_normalize.py[0m:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mnormalize[39;49;00m(values):[90m[39;49;00m
+        total = [96msum[39;49;00m(values)[90m[39;49;00m
+>       [94mreturn[39;49;00m [v / total [94mfor[39;49;00m v [95min[39;49;00m values][90m[39;49;00m
+                ^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:16: ZeroDivisionError
+[31m[1m__________________________ test_parse_ratio[7/0-1.0] ___________________________[0m
+
+text = '7/0', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+               ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_ratio.py[0m:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '7/0'
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mparse_ratio[39;49;00m(text):[90m[39;49;00m
+        a, b = text.split([33m"[39;49;00m[33m/[39;49;00m[33m"[39;49;00m)[90m[39;49;00m
+>       [94mreturn[39;49;00m [96mint[39;49;00m(a) / [96mint[39;49;00m(b)[90m[39;49;00m
+               ^^^^^^^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:6: ZeroDivisionError
+[31m[1m__________________________ test_parse_ratio[8/1-1.0] ___________________________[0m
+
+text = '8/1', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 8.0 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 8.0[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[9/2-1.0] ___________________________[0m
+
+text = '9/2', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 4.5 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 4.5[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[10/3-1.0] __________________________[0m
+
+text = '10/3', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 3.3333333333333335 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 3.3333333333333335[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[11/4-1.0] __________________________[0m
+
+text = '11/4', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 2.75 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 2.75[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[12/5-1.0] __________________________[0m
+
+text = '12/5', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 2.4 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 2.4[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[13/6-1.0] __________________________[0m
+
+text = '13/6', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 2.1666666666666665 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 2.1666666666666665[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[14/0-1.0] __________________________[0m
+
+text = '14/0', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+               ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_ratio.py[0m:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '14/0'
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mparse_ratio[39;49;00m(text):[90m[39;49;00m
+        a, b = text.split([33m"[39;49;00m[33m/[39;49;00m[33m"[39;49;00m)[90m[39;49;00m
+>       [94mreturn[39;49;00m [96mint[39;49;00m(a) / [96mint[39;49;00m(b)[90m[39;49;00m
+               ^^^^^^^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:6: ZeroDivisionError
+[31m[1m__________________________ test_parse_ratio[15/1-1.0] __________________________[0m
+
+text = '15/1', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 15.0 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 15.0[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[16/2-1.0] __________________________[0m
+
+text = '16/2', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 8.0 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 8.0[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[17/3-1.0] __________________________[0m
+
+text = '17/3', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 5.666666666666667 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 5.666666666666667[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[18/4-1.0] __________________________[0m
+
+text = '18/4', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 4.5 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 4.5[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[19/5-1.0] __________________________[0m
+
+text = '19/5', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 3.8 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 3.8[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[20/6-1.0] __________________________[0m
+
+text = '20/6', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 3.3333333333333335 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 3.3333333333333335[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[21/0-1.0] __________________________[0m
+
+text = '21/0', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+               ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_ratio.py[0m:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '21/0'
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mparse_ratio[39;49;00m(text):[90m[39;49;00m
+        a, b = text.split([33m"[39;49;00m[33m/[39;49;00m[33m"[39;49;00m)[90m[39;49;00m
+>       [94mreturn[39;49;00m [96mint[39;49;00m(a) / [96mint[39;49;00m(b)[90m[39;49;00m
+               ^^^^^^^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:6: ZeroDivisionError
+[31m[1m__________________________ test_parse_ratio[22/1-1.0] __________________________[0m
+
+text = '22/1', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 22.0 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 22.0[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[23/2-1.0] __________________________[0m
+
+text = '23/2', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 11.5 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 11.5[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[24/3-1.0] __________________________[0m
+
+text = '24/3', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 8.0 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 8.0[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[25/4-1.0] __________________________[0m
+
+text = '25/4', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 6.25 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 6.25[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[26/5-1.0] __________________________[0m
+
+text = '26/5', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 5.2 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 5.2[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[27/6-1.0] __________________________[0m
+
+text = '27/6', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 4.5 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 4.5[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[28/0-1.0] __________________________[0m
+
+text = '28/0', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+               ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_ratio.py[0m:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '28/0'
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mparse_ratio[39;49;00m(text):[90m[39;49;00m
+        a, b = text.split([33m"[39;49;00m[33m/[39;49;00m[33m"[39;49;00m)[90m[39;49;00m
+>       [94mreturn[39;49;00m [96mint[39;49;00m(a) / [96mint[39;49;00m(b)[90m[39;49;00m
+               ^^^^^^^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:6: ZeroDivisionError
+[31m[1m__________________________ test_parse_ratio[29/1-1.0] __________________________[0m
+
+text = '29/1', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 29.0 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 29.0[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[30/2-1.0] __________________________[0m
+
+text = '30/2', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 15.0 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 15.0[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[31/3-1.0] __________________________[0m
+
+text = '31/3', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 10.333333333333334 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 10.333333333333334[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[32/4-1.0] __________________________[0m
+
+text = '32/4', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 8.0 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 8.0[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[33/5-1.0] __________________________[0m
+
+text = '33/5', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 6.6 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 6.6[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[34/6-1.0] __________________________[0m
+
+text = '34/6', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 5.666666666666667 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 5.666666666666667[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[35/0-1.0] __________________________[0m
+
+text = '35/0', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+               ^^^^^^^^^^^^^^^^^[90m[39;49;00m
+
+[1m[31mtests/test_ratio.py[0m:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '35/0'
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mparse_ratio[39;49;00m(text):[90m[39;49;00m
+        a, b = text.split([33m"[39;49;00m[33m/[39;49;00m[33m"[39;49;00m)[90m[39;49;00m
+>       [94mreturn[39;49;00m [96mint[39;49;00m(a) / [96mint[39;49;00m(b)[90m[39;49;00m
+               ^^^^^^^^^^^^^^^[90m[39;49;00m
+[1m[31mE       ZeroDivisionError: division by zero[0m
+
+[1m[31mmathlib.py[0m:6: ZeroDivisionError
+[31m[1m__________________________ test_parse_ratio[36/1-1.0] __________________________[0m
+
+text = '36/1', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 36.0 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 36.0[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[37/2-1.0] __________________________[0m
+
+text = '37/2', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 18.5 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 18.5[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[38/3-1.0] __________________________[0m
+
+text = '38/3', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 12.666666666666666 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 12.666666666666666[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[31m[1m__________________________ test_parse_ratio[39/4-1.0] __________________________[0m
+
+text = '39/4', expected = 1.0
+
+    [0m[37m@pytest[39;49;00m.mark.parametrize([33m"[39;49;00m[33mtext,expected[39;49;00m[33m"[39;49;00m, [([33mf[39;49;00m[33m"[39;49;00m[33m{[39;49;00mi[33m}[39;49;00m[33m/[39;49;00m[33m{[39;49;00mi[90m [39;49;00m%[90m [39;49;00m[94m7[39;49;00m[33m}[39;49;00m[33m"[39;49;00m, [94m1.0[39;49;00m) [94mfor[39;49;00m i [95min[39;49;00m [96mrange[39;49;00m([94m1[39;49;00m, [94m40[39;49;00m)])[90m[39;49;00m
+    [94mdef[39;49;00m[90m [39;49;00m[92mtest_parse_ratio[39;49;00m(text, expected):[90m[39;49;00m
+>       [94massert[39;49;00m parse_ratio(text) == pytest.approx(expected)[90m[39;49;00m
+[1m[31mE       assert 9.75 == 1.0 ± 1.0e-06[0m
+[1m[31mE         [0m
+[1m[31mE         comparison failed[0m
+[1m[31mE         Obtained: 9.75[0m
+[1m[31mE         Expected: 1.0 ± 1.0e-06[0m
+
+[1m[31mtests/test_ratio.py[0m:7: AssertionError
+[36m[1m=========================== short test summary info ============================[0m
+[31mFAILED[0m tests/test_account.py::[1mtest_withdraw[500][0m - ValueError: insufficient funds: 100 < 500
+[31mFAILED[0m tests/test_account.py::[1mtest_withdraw[5000][0m - ValueError: insufficient funds: 100 < 5000
+[31mFAILED[0m tests/test_config.py::[1mtest_loads_defaults[0m - FileNotFoundError: [Errno 2] No such file or directory: 'config/defaults.json'
+[31mFAILED[0m tests/test_config.py::[1mtest_loads_override[0m - FileNotFoundError: [Errno 2] No such file or directory: 'config/override.json'
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[0][0m - assert 0 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[1][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[2][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[3][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[4][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[5][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[6][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[7][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[8][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[9][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[10][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[11][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[12][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[13][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[14][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[15][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[16][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[17][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[18][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[19][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[20][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[21][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[22][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[23][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_normalize.py::[1mtest_sums_to_one[24][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[7/0-1.0][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[8/1-1.0][0m - assert 8.0 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[9/2-1.0][0m - assert 4.5 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[10/3-1.0][0m - assert 3.3333333333333335 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[11/4-1.0][0m - assert 2.75 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[12/5-1.0][0m - assert 2.4 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[13/6-1.0][0m - assert 2.1666666666666665 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[14/0-1.0][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[15/1-1.0][0m - assert 15.0 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[16/2-1.0][0m - assert 8.0 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[17/3-1.0][0m - assert 5.666666666666667 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[18/4-1.0][0m - assert 4.5 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[19/5-1.0][0m - assert 3.8 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[20/6-1.0][0m - assert 3.3333333333333335 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[21/0-1.0][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[22/1-1.0][0m - assert 22.0 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[23/2-1.0][0m - assert 11.5 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[24/3-1.0][0m - assert 8.0 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[25/4-1.0][0m - assert 6.25 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[26/5-1.0][0m - assert 5.2 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[27/6-1.0][0m - assert 4.5 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[28/0-1.0][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[29/1-1.0][0m - assert 29.0 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[30/2-1.0][0m - assert 15.0 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[31/3-1.0][0m - assert 10.333333333333334 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[32/4-1.0][0m - assert 8.0 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[33/5-1.0][0m - assert 6.6 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[34/6-1.0][0m - assert 5.666666666666667 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[35/0-1.0][0m - ZeroDivisionError: division by zero
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[36/1-1.0][0m - assert 36.0 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[37/2-1.0][0m - assert 18.5 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[38/3-1.0][0m - assert 12.666666666666666 == 1.0 ± 1.0e-06
+[31mFAILED[0m tests/test_ratio.py::[1mtest_parse_ratio[39/4-1.0][0m - assert 9.75 == 1.0 ± 1.0e-06
+[31mERROR[0m tests/test_account.py::[1mtest_history[0m - ConnectionError: database at 'localhost:5432' refused the connection
+[31m==================== [31m[1m62 failed[0m, [32m70 passed[0m, [31m[1m1 error[0m[31m in 0.21s[0m[31m ====================[0m

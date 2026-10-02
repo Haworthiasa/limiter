@@ -1,0 +1,662 @@
+..FFE.FFFFFFFFFFFFFFFFFFFFFFFFFFF.                                       [100%]
+==================================== ERRORS ====================================
+________________________ ERROR at setup of test_history ________________________
+
+    @pytest.fixture
+    def broken_db():
+>       raise ConnectionError("database at 'localhost:5432' refused the connection")
+E       ConnectionError: database at 'localhost:5432' refused the connection
+
+tests/test_account.py:7: ConnectionError
+=================================== FAILURES ===================================
+______________________________ test_withdraw[500] ______________________________
+
+amount = 500
+
+    @pytest.mark.parametrize("amount", [5, 50, 500, 5000])
+    def test_withdraw(amount):
+        acct = Account(100)
+>       assert acct.withdraw(amount) == 100 - amount
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_account.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <mathlib.Account object at 0x75bd5e777890>, amount = 500
+
+    def withdraw(self, amount):
+        if amount > self.balance:
+>           raise ValueError(f"insufficient funds: {self.balance} < {amount}")
+E           ValueError: insufficient funds: 100 < 500
+
+mathlib.py:25: ValueError
+_____________________________ test_withdraw[5000] ______________________________
+
+amount = 5000
+
+    @pytest.mark.parametrize("amount", [5, 50, 500, 5000])
+    def test_withdraw(amount):
+        acct = Account(100)
+>       assert acct.withdraw(amount) == 100 - amount
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_account.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <mathlib.Account object at 0x75bd5e766ea0>, amount = 5000
+
+    def withdraw(self, amount):
+        if amount > self.balance:
+>           raise ValueError(f"insufficient funds: {self.balance} < {amount}")
+E           ValueError: insufficient funds: 100 < 5000
+
+mathlib.py:25: ValueError
+_____________________________ test_loads_defaults ______________________________
+
+    def test_loads_defaults():
+>       assert load_config("config/defaults.json")["retries"] == 3
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_config.py:5: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = 'config/defaults.json'
+
+    def load_config(path):
+>       with open(path) as f:
+             ^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'config/defaults.json'
+
+mathlib.py:10: FileNotFoundError
+_____________________________ test_loads_override ______________________________
+
+    def test_loads_override():
+>       cfg = load_config("config/override.json")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_config.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = 'config/override.json'
+
+    def load_config(path):
+>       with open(path) as f:
+             ^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'config/override.json'
+
+mathlib.py:10: FileNotFoundError
+_____________________________ test_sums_to_one[0] ______________________________
+
+n = 0
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+E       assert 0 == 1.0 ± 1.0e-06
+E         
+E         comparison failed
+E         Obtained: 0
+E         Expected: 1.0 ± 1.0e-06
+
+tests/test_normalize.py:8: AssertionError
+_____________________________ test_sums_to_one[1] ______________________________
+
+n = 1
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[2] ______________________________
+
+n = 2
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[3] ______________________________
+
+n = 3
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[4] ______________________________
+
+n = 4
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[5] ______________________________
+
+n = 5
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[6] ______________________________
+
+n = 6
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[7] ______________________________
+
+n = 7
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[8] ______________________________
+
+n = 8
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[9] ______________________________
+
+n = 9
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[10] _____________________________
+
+n = 10
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[11] _____________________________
+
+n = 11
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[12] _____________________________
+
+n = 12
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[13] _____________________________
+
+n = 13
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[14] _____________________________
+
+n = 14
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[15] _____________________________
+
+n = 15
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[16] _____________________________
+
+n = 16
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[17] _____________________________
+
+n = 17
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[18] _____________________________
+
+n = 18
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[19] _____________________________
+
+n = 19
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[20] _____________________________
+
+n = 20
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[21] _____________________________
+
+n = 21
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[22] _____________________________
+
+n = 22
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[23] _____________________________
+
+n = 23
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+_____________________________ test_sums_to_one[24] _____________________________
+
+n = 24
+
+    @pytest.mark.parametrize("n", range(25))
+    def test_sums_to_one(n):
+        values = [0] * n
+>       assert sum(normalize(values)) == pytest.approx(1.0)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_normalize.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0, 0, 0, 0, 0, 0, ...]
+
+    def normalize(values):
+        total = sum(values)
+>       return [v / total for v in values]
+                ^^^^^^^^^
+E       ZeroDivisionError: division by zero
+
+mathlib.py:16: ZeroDivisionError
+=========================== short test summary info ============================
+FAILED tests/test_account.py::test_withdraw[500] - ValueError: insufficient f...
+FAILED tests/test_account.py::test_withdraw[5000] - ValueError: insufficient ...
+FAILED tests/test_config.py::test_loads_defaults - FileNotFoundError: [Errno ...
+FAILED tests/test_config.py::test_loads_override - FileNotFoundError: [Errno ...
+FAILED tests/test_normalize.py::test_sums_to_one[0] - assert 0 == 1.0 ± 1.0e-06
+FAILED tests/test_normalize.py::test_sums_to_one[1] - ZeroDivisionError: divi...
+FAILED tests/test_normalize.py::test_sums_to_one[2] - ZeroDivisionError: divi...
+FAILED tests/test_normalize.py::test_sums_to_one[3] - ZeroDivisionError: divi...
+FAILED tests/test_normalize.py::test_sums_to_one[4] - ZeroDivisionError: divi...
+FAILED tests/test_normalize.py::test_sums_to_one[5] - ZeroDivisionError: divi...
+FAILED tests/test_normalize.py::test_sums_to_one[6] - ZeroDivisionError: divi...
+FAILED tests/test_normalize.py::test_sums_to_one[7] - ZeroDivisionError: divi...
+FAILED tests/test_normalize.py::test_sums_to_one[8] - ZeroDivisionError: divi...
+FAILED tests/test_normalize.py::test_sums_to_one[9] - ZeroDivisionError: divi...
+FAILED tests/test_normalize.py::test_sums_to_one[10] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[11] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[12] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[13] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[14] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[15] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[16] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[17] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[18] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[19] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[20] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[21] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[22] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[23] - ZeroDivisionError: div...
+FAILED tests/test_normalize.py::test_sums_to_one[24] - ZeroDivisionError: div...
+ERROR tests/test_account.py::test_history - ConnectionError: database at 'loc...
+29 failed, 4 passed, 1 error in 0.05s
