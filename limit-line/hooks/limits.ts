@@ -79,15 +79,15 @@ export function warnLevel(pct: number): 0 | 80 | 95 {
   return 0
 }
 
-type Tier = { cells: number; weekReset: boolean; eta: boolean }
+export type Tier = { cells: number; weekReset: boolean; eta: boolean }
 
-const TIERS: Tier[] = [
+export const TIERS: Tier[] = [
   { cells: 6, weekReset: true, eta: true },
   { cells: 4, weekReset: false, eta: true },
   { cells: 0, weekReset: false, eta: false },
 ]
 
-const SEP: Segment = { text: ' | ', dim: true }
+export const SEP: Segment = { text: ' | ', dim: true }
 
 function windowSegments(
   label: string,
@@ -112,7 +112,7 @@ function windowSegments(
   return out
 }
 
-function lineFor(view: View, tier: Tier, offsetMin: number): Segment[] {
+export function lineFor(view: View, tier: Tier, offsetMin: number): Segment[] {
   const parts: Segment[][] = []
   const now = view.now
   if (view.five) {
@@ -130,17 +130,4 @@ function lineFor(view: View, tier: Tier, offsetMin: number): Segment[] {
 
 export function width(segments: Segment[]): number {
   return segments.reduce((n, s) => n + [...s.text].length, 0)
-}
-
-// The widest line that fits `columns`, dropping detail tier by tier.
-export function layout(view: View, columns: number, offsetMin: number): Segment[] {
-  if (!view.five && !view.week && view.ctx === undefined) {
-    return [{ text: 'limits: chờ lượt trả lời đầu tiên…', dim: true }]
-  }
-  let line: Segment[] = []
-  for (const tier of TIERS) {
-    line = lineFor(view, tier, offsetMin)
-    if (width(line) <= columns) return line
-  }
-  return line
 }

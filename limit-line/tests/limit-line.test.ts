@@ -1,7 +1,8 @@
 import { describe, expect, mock, test } from 'claude-code/testing'
 import type { RenderElement, SessionRateLimit } from 'claude-code'
 
-import { addReading, bar, colorOf, dayTime, duration, fullAt, layout, FIVE_HOUR_MS } from '../hooks/limits'
+import { bandLine } from '../hooks/band'
+import { addReading, bar, colorOf, dayTime, duration, fullAt, FIVE_HOUR_MS } from '../hooks/limits'
 
 const T0 = Date.UTC(2026, 9, 2, 3, 0, 0) // 10:00 in UTC+7, a Friday
 const MIN = 60_000
@@ -53,7 +54,7 @@ describe('pure helpers', () => {
       week: { pct: 18, resetsAt: T0 + 3 * 24 * HOUR },
       ctx: 41,
     }
-    const text = (cols: number) => layout(view, cols, 420).map(s => s.text).join('')
+    const text = (cols: number) => bandLine(view, { dist: 0 }, cols, 420).map(s => s.text).join('')
     const wide = text(200)
     expect(wide).toBe('5h ████░░ 62% 1h23m !2h05m | wk █░░░░░ 18% T2 10:00 | ctx ██░░░░ 41%')
     expect(wide.length).toBeLessThanOrEqual(75)
