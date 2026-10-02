@@ -53,8 +53,10 @@ TurnUsage      = { input_tokens; output_tokens; cache_read_input_tokens; cache_c
   `cacheWrite1h` exists only for JSONL records; for the live ledger the TTL rule cannot tell
   5m from 1h. Every cache write on this account in JSONL is `ephemeral_1h` (see below), so the
   live default should be **60 min**, configurable.
-- `turn.step` is a streaming event (chunks: text/thinking/tool/input/stop/engine); the
-  result's `usage` is null when no response arrived.
+- `turn.step` is a streaming event. Its hook **must be an async generator**
+  (`async function* ($, e, next) { const r = yield* next(e); … }`, "the one form that loads
+  there", reference.md). `yield* next(e)` forwards the chunks and evaluates to `TurnStepResult`,
+  whose `usage` is null when no response arrived.
 - `TurnCompleteInput = { reason: 'answer'|'aborted'|'refusal'|'error'; isAborted; turnId; agentId?; usage?: TurnUsage; refusal? }`.
   `usage` here is the **sum of the turn's requests** and the last model. That is enough for the
   band's turn line without summing `turn.step` ourselves, except for the request count.
@@ -112,9 +114,10 @@ Checked on 7 local transcripts (WSL, 2026-10-01..02).
   `cache_creation_input_tokens`, **`cache_creation.{ephemeral_5m_input_tokens, ephemeral_1h_input_tokens}`**,
   `service_tier`, `speed`, `iterations[]`, `server_tool_use`.
 - **Duplicates confirmed:** one response is written as 2–3 lines (one per content block), same
-  `message.id + requestId`, **identical usage** (output_tokens already final). Dedupe key
+  `message.id + requestId`, **identical usage** (output_tokens already final): 67 groups across
+  all 7 files, 0 with differing usage. Dedupe key
   `message.id + requestId`: 70 → 42 and 35 → 15 in the two sessions with usage.
-- Every cache write seen is `ephemeral_1h` (5m = 0).
+- Every cache write seen is `ephemeral_1h`: across all files, after dedupe, 5m = 0 and 1h = 220,275 tokens.
 - Other entry types (skip): `mode`, `permission-mode`, `atis-latch`, `attachment`, `user`,
   `last-prompt`, `ai-title`, `file-history-snapshot/-delta`, `cost-state`, `queue-operation`,
   `dev-mods`, `system/{informational, turn_duration, local_command, away_summary}`.
