@@ -6,7 +6,7 @@ import type { EngineInterface, On } from 'claude-code'
 
 import type { DistillEvent, DistillKind } from '../types'
 import { ANNOTATION, DISTILL_MIN_CHARS, annotation, distillText, isBypassed, isWrapped } from './distill/index.ts'
-import { dataDir, monthKey, stamp, TZ_OFFSET_MIN, wrapCommand } from './paths'
+import { dataDir, monthKey, stamp, TZ_OFFSET_MIN, wrapCommand } from './paths.ts'
 
 // The same $.state values register.tsx declares; an atom is read where it is written.
 const distSession = atom({ plugin: 'limit-line', key: 'distSession' } as const, 0)

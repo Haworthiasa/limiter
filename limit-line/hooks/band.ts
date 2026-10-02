@@ -2,10 +2,10 @@
 // Pure: built from values, measured in cells, trimmed to fit.
 
 import type { LastTurn, View } from '../types'
-import { lineFor, SEP, TIERS, width } from './limits'
-import type { Tier } from './limits'
-import type { Segment } from './limits'
-import { cacheHit } from './metrics'
+import { lineFor, SEP, TIERS, width } from './limits.ts'
+import type { Tier } from './limits.ts'
+import type { Segment } from './limits.ts'
+import { cacheHit } from './metrics.ts'
 
 export type Extras = {
   /** Cache hit of the last turn, 0..1. */

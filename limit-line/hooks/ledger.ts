@@ -1,8 +1,8 @@
 // The live ledger's pure half: records from step usage, files by day, sparse snapshots.
 
 import type { MeasureSnapshot, RequestRecord } from '../types'
-import { dayKey, TZ_OFFSET_MIN } from './paths'
-import type { StepUsage } from './turnstats'
+import { dayKey, TZ_OFFSET_MIN } from './paths.ts'
+import type { StepUsage } from './turnstats.ts'
 
 export function toRecord(
   usage: StepUsage,

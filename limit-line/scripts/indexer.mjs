@@ -168,7 +168,7 @@ for (const path of jsonlFiles(PROJECTS)) {
       const compactBetween = before?.compactAt !== undefined && before.compactAt >= (before.ts ?? 0)
       const cause = bustCause(r, prevReq, compactBetween)
       if (d.busts.length < MAX_BUSTS) {
-        d.busts.push({ ts, sessionId, project, model: r.model, ctx: ctxOf(r), cacheRead: r.cacheRead, cause })
+        d.busts.push({ ts, sessionId, project, model: r.model, prevModel: prevReq.model, gapMs: ts - prevReq.ts, ctx: ctxOf(r), cacheRead: r.cacheRead, cause })
       }
     }
     state.sessions[seq] = { ts, model: r.model, ttl1h: nextTtl1h(r, before?.ttl1h) }

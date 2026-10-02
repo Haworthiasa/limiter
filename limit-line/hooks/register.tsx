@@ -1,14 +1,18 @@
 import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register, SessionRateLimit, SessionContextUsage } from 'claude-code'
 
-import type { CompactMark, LastTurn, MeasureSnapshot, Reading, RequestRecord, TurnAcc, View, Win } from '../types'
-import { bandLine, extrasOf, turnLine } from './band'
+import type { CompactMark, DayAgg, DistillEvent, LastTurn, MeasureSnapshot, Reading, RequestRecord, TurnAcc, View, Win } from '../types'
+import { bandLine, extrasOf, shortModel, turnLine } from './band'
+import { buildDash, lastDates } from './dashdata'
+import type { DashData } from './dashdata'
+import { SUBTITLE, dashboardLines } from './dashboard'
+import type { Tab } from './dashboard'
 import { basename, byDay, shouldSnapshot, toRecord } from './ledger'
 import { KINDS, addReading, fullAt, warnLevel } from './limits'
 import type { Kind, Segment } from './limits'
 import { OFF_KEY, registerDistiller } from './distiller'
 import { costOf } from './metrics'
-import { dataDir, monthKey, TZ_OFFSET_MIN } from './paths'
+import { dataDir, dayKey, monthKey, TZ_OFFSET_MIN } from './paths'
 import { addStep, pushHistory } from './turnstats'
 
 const view = atom({ plugin: 'limit-line', key: 'view' } as const, { now: 0 } as View)
@@ -22,6 +26,16 @@ const distillOn = atom({ plugin: 'limit-line', key: 'distillOn' } as const, true
 // Requests not yet written to the day's ledger file.
 const ledgerBuf = atom({ plugin: 'limit-line', key: 'ledgerBuf' } as const, [] as RequestRecord[])
 const lastSnap = atom({ plugin: 'limit-line', key: 'lastSnap' } as const, null as MeasureSnapshot | null)
+// What /usage-plus last computed, and the tab it shows.
+const dash = atom({ plugin: 'limit-line', key: 'dash' } as const, null as DashData | null)
+const dashTab = atom({ plugin: 'limit-line', key: 'dashTab' } as const, 'week' as Tab)
+
+const PANE_ID = 'usage-plus'
+const TABS: { tab: Tab; key: string; label: string }[] = [
+  { tab: 'session', key: '1', label: 'Session' },
+  { tab: 'week', key: '2', label: 'Week' },
+  { tab: 'month', key: '3', label: 'Month' },
+]
 
 // Remembered across sessions; $.state holds the live value.
 const EXPANDED_KEY = 'band.expanded'
@@ -54,6 +68,51 @@ async function appendJson<T>($: EngineInterface, path: string, items: readonly T
     // A new file.
   }
   await $.fs.write(path, JSON.stringify([...list, ...items]))
+}
+
+async function readJsonFile<T>($: EngineInterface, path: string, fallback: T): Promise<T> {
+  try {
+    return JSON.parse(await $.fs.read(path)) as T
+  } catch {
+    return fallback
+  }
+}
+
+/** Runs the indexer, reads what the mod and the indexer keep, and computes the dashboard. */
+async function loadDash($: EngineInterface): Promise<DashData> {
+  const home = await $.env.get('HOME')
+  if (!home) throw new Error('HOME is not set')
+  const data = dataDir(home)
+  const now = await $.clock.now()
+
+  let indexer: { newLines: number; bad: number } | { error: string }
+  try {
+    const run = await $.process.run(['node', `${$.plugin.root}/scripts/indexer.mjs`, '--data', data], { timeoutMs: 120_000 })
+    const last = run.stdout.trim().split('\n').pop() ?? ''
+    indexer = run.exitCode === 0 ? (JSON.parse(last) as { newLines: number; bad: number }) : { error: run.stderr.trim().split('\n').pop() ?? `exit ${run.exitCode}` }
+  } catch (err) {
+    indexer = { error: String(err).slice(0, 160) }
+  }
+
+  const today = dayKey(now, TZ_OFFSET_MIN)
+  const dates = lastDates(today, 35)
+  const days: DayAgg[] = []
+  for (const date of dates) {
+    const d = await readJsonFile<DayAgg | null>($, `${data}/index/days/${date}.json`, null)
+    if (d) days.push(d)
+  }
+  const ledger: RequestRecord[] = []
+  for (const date of dates.slice(-2)) ledger.push(...(await readJsonFile<RequestRecord[]>($, `${data}/ledger/${date}.json`, [])))
+  const months = [...new Set([monthKey(now - 35 * 86_400_000, TZ_OFFSET_MIN), monthKey(now, TZ_OFFSET_MIN)])]
+  const marks: CompactMark[] = []
+  const snaps: MeasureSnapshot[] = []
+  const distill: DistillEvent[] = []
+  for (const m of months) {
+    marks.push(...(await readJsonFile<CompactMark[]>($, `${data}/compact/${m}.json`, [])))
+    snaps.push(...(await readJsonFile<MeasureSnapshot[]>($, `${data}/measure/${m}.json`, [])))
+    distill.push(...(await readJsonFile<DistillEvent[]>($, `${data}/distill/${m}.json`, [])))
+  }
+  return buildDash({ now, sessionId: await $.session.id(), days, ledger, marks, snaps, distill, shortModel, indexer })
 }
 
 /** Writes the buffered requests to their day files. */
@@ -160,6 +219,15 @@ export const register: Register = on => {
       if ((await $.store.get(OFF_KEY)) === true) await update($, distillOn, () => false)
     } catch {
       // The distiller is on by default.
+    }
+    try {
+      await $.command.register({ name: 'usage-plus', description: 'Bảng usage: phiên / tuần / tháng', immediate: true })
+    } catch {
+      try {
+        await $.command.register({ name: 'usage-x', description: 'Bảng usage: phiên / tuần / tháng', immediate: true })
+      } catch {
+        // No dashboard command this session.
+      }
     }
     try {
       await $.command.register({ name: 'distill', description: 'Distiller: /distill on | off | stats | last' })
@@ -271,6 +339,63 @@ export const register: Register = on => {
       // The extras keep the last turn's figures.
     }
     return result
+  })
+
+  on('command.run', { command: /^usage-(plus|x)$/ }, async $ => {
+    try {
+      // The ledger's buffer first, so the session tab has this turn's requests.
+      await flushLedger($)
+    } catch {
+      // The session tab is a turn behind.
+    }
+    const computed = await loadDash($)
+    await update($, dash, () => computed)
+    const opened = await $.ui.open({ id: PANE_ID, title: 'usage-plus', focus: true, closeOnEscape: true })
+    if (!opened.isPlaced) return { text: `usage-plus: ${opened.reason}` }
+    // A redraw for a pane that was already open.
+    $.ui.invalidate('ui.render')
+    return {}
+  })
+
+  on('ui.render', { component: 'Pane', requestId: PANE_ID }, async ($, e, next) => {
+    const d = await read($, dash)
+    const tab = await read($, dashTab)
+    const { Box, Button, Text } = $.ui.resolve(e)
+    const cols = e.props.bodyColumns
+    const lines = d === null ? [[{ text: 'Gõ /usage-plus để tính lại.', dim: true }]] : dashboardLines(d, tab, cols)
+    return (
+      <Box flexDirection="column">
+        <Box flexDirection="row">
+          {TABS.map(t => (
+            <Button
+              key={`tab-${t.tab}`}
+              label={tab === t.tab ? `[${t.key} ${t.label}]` : ` ${t.key} ${t.label} `}
+              hotkey={t.key}
+              plain
+              dimColor={tab !== t.tab}
+              onPress={() => void update($, dashTab, () => t.tab)}
+            />
+          ))}
+          <Box flexGrow={1} />
+          {cols >= 60 && <Text dimColor>{SUBTITLE[tab]} </Text>}
+          <Button key="close" label="[x]" hotkey="x" plain role="dismiss" onPress={() => void $.ui.close({ id: PANE_ID })} />
+        </Box>
+        <Text> </Text>
+        {lines.map((line, i) => (
+          <Box key={`l${i}`} flexDirection="row">
+            {line.length === 0 ? (
+              <Text> </Text>
+            ) : (
+              line.map((s, j) => (
+                <Text key={`l${i}s${j}`} color={s.color} dimColor={s.dim} wrap="truncate">
+                  {s.text}
+                </Text>
+              ))
+            )}
+          </Box>
+        ))}
+      </Box>
+    )
   })
 
   on('command.run', { command: 'limits' }, async ($, e) => {
