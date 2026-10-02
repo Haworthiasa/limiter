@@ -3,6 +3,7 @@
   "owner": {
     "name": "bosshadabest"
   },
+  "description": "Personal Claude Code mods",
   "plugins": [
     {
       "name": "limit-line",
