@@ -1,7 +1,9 @@
 {
   "name": "limit-line",
-  "version": "0.1.0",
-  "description": "One line above the prompt: 5-hour and weekly limits with bars, reset countdowns, a fill forecast and context usage.",
-  "author": { "name": "bosshadabest" },
+  "version": "0.2.0",
+  "description": "Limits band above the prompt (5h, week, context, cache hit, context delta, distiller savings) with a turn detail line, a /usage-plus dashboard, and a Bash output distiller for pytest and long logs.",
+  "author": {
+    "name": "bosshadabest"
+  },
   "types": "./types/index.d.ts"
 }

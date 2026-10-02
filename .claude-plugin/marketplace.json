@@ -1,5 +1,14 @@
 {
   "name": "my-mods",
-  "owner": { "name": "bosshadabest" },
-  "plugins": [{ "name": "limit-line", "source": "./limit-line", "description": "5h / weekly limits, reset countdowns, forecast and context in one line above the prompt" }]
+  "owner": {
+    "name": "bosshadabest"
+  },
+  "plugins": [
+    {
+      "name": "limit-line",
+      "source": "./limit-line",
+      "description": "Limits band (5h / week / context / cache / context delta), /usage-plus dashboard, Bash output distiller",
+      "version": "0.2.0"
+    }
+  ]
 }
