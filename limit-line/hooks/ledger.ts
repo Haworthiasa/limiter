@@ -6,7 +6,7 @@ import type { StepUsage } from './turnstats.ts'
 
 export function toRecord(
   usage: StepUsage,
-  at: { ts: number; sessionId: string; project: string; turnId: string; agentId?: string },
+  at: { ts: number; sessionId: string; project: string; turnId: string; agentId?: string; ms?: number },
 ): RequestRecord {
   return {
     ts: at.ts,
@@ -18,6 +18,7 @@ export function toRecord(
     cacheRead: usage.cache_read_input_tokens,
     cacheWrite: usage.cache_creation_input_tokens,
     turnId: at.turnId,
+    ...(at.ms !== undefined ? { durationMs: at.ms } : {}),
     isSubagent: at.agentId !== undefined,
     source: 'live',
   }

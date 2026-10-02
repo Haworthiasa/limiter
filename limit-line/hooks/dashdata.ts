@@ -3,7 +3,7 @@
 import type { BustEvent, CompactMark, DashData, DayAgg, DayRow, DistillEvent, DistillSummary, LimitsHistory, MeasureSnapshot, RequestRecord, Share, Tokens, TurnRow } from '../types'
 
 export type { DashData, DayRow, DistillSummary, LimitsHistory, Share, TurnRow }
-import { bustCause, cacheHit, costOf, ctxOf, elsewhereShare, isBust, savings } from './metrics.ts'
+import { bustCause, cacheHit, costOf, ctxOf, elsewhereShare, isBust, savings, timeable, tokPerSec } from './metrics.ts'
 import type { Prev } from './metrics.ts'
 import { dayKey, TZ_OFFSET_MIN } from './paths.ts'
 
@@ -87,6 +87,9 @@ export function sessionTurns(records: readonly RequestRecord[]): TurnRow[] {
     }
     const hit = cacheHit(sum)
     if (hit !== undefined) row.hit = hit
+    const timed = rs.filter(r => timeable(r.output, r.durationMs))
+    const tps = tokPerSec(timed.reduce((n, r) => n + r.output, 0), timed.reduce((n, r) => n + (r.durationMs as number), 0))
+    if (tps !== undefined) row.tps = tps
     if (prevCtx !== undefined) row.delta = ctx - prevCtx
     prevCtx = ctx
     rows.push(row)

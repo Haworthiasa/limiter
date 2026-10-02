@@ -5,7 +5,7 @@ import type { LastTurn, View } from '../types'
 import { lineFor, SEP, TIERS, width } from './limits.ts'
 import type { Tier } from './limits.ts'
 import type { Segment } from './limits.ts'
-import { cacheHit } from './metrics.ts'
+import { cacheHit, tokPerSec } from './metrics.ts'
 
 export type Extras = {
   /** Cache hit of the last turn, 0..1. */
@@ -14,6 +14,8 @@ export type Extras = {
   delta?: number
   /** The context window `delta` is judged against. */
   window?: number
+  /** Output tokens per second of the last turn, when it had a long enough answer. */
+  tps?: number
   /** Characters the distiller cut this session. */
   dist: number
 }
@@ -21,7 +23,8 @@ export type Extras = {
 /** The extras of a finished turn; nothing before the first one. */
 export function extrasOf(last: LastTurn | null, dist: number): Extras {
   if (last === null) return { dist }
-  return { cacheHit: cacheHit(last), delta: last.delta, window: last.window, dist }
+  const tps = tokPerSec(last.genOut, last.genMs)
+  return { cacheHit: cacheHit(last), delta: last.delta, window: last.window, ...(tps !== undefined ? { tps } : {}), dist }
 }
 
 export function fmtTokens(n: number): string {
@@ -60,9 +63,20 @@ export function shortModel(model: string): string {
   return /opus|sonnet|haiku|fable|mythos/.exec(model)?.[0] ?? model
 }
 
-type Extra = 'cache' | 'delta' | 'dist'
+/** Green from 60 tok/s, yellow from 30, red below. */
+export function tpsColor(tps: number): string {
+  if (tps >= 60) return 'green'
+  if (tps >= 30) return 'yellow'
+  return 'red'
+}
+
+export function fmtTps(tps: number): string {
+  return `${Math.round(tps)}`
+}
+
+type Extra = 'cache' | 'delta' | 'tps' | 'dist'
 // Lowest priority last: dropped first.
-const EXTRA_ORDER: Extra[] = ['cache', 'delta', 'dist']
+const EXTRA_ORDER: Extra[] = ['cache', 'delta', 'tps', 'dist']
 
 function withExtras(base: Segment[], view: View, ex: Extras, keep: readonly Extra[]): Segment[] {
   const out = [...base]
@@ -76,6 +90,9 @@ function withExtras(base: Segment[], view: View, ex: Extras, keep: readonly Extr
     const pct = Math.round(ex.cacheHit * 100)
     out.push(...(out.length > 0 ? [SEP] : []), { text: 'cache ', dim: true }, { text: `${pct}%`, color: cacheColor(pct) })
   }
+  if (keep.includes('tps') && ex.tps !== undefined) {
+    out.push(...(out.length > 0 ? [SEP] : []), { text: '⚡ ', dim: true }, { text: `${fmtTps(ex.tps)} tok/s`, color: tpsColor(ex.tps) })
+  }
   if (keep.includes('dist') && ex.dist > 0) {
     out.push(...(out.length > 0 ? [SEP] : []), { text: 'dist ', dim: true }, { text: `-${fmtTokens(ex.dist)}` })
   }
@@ -86,7 +103,7 @@ function withExtras(base: Segment[], view: View, ex: Extras, keep: readonly Extr
  * limits drop detail tier by tier as before. */
 export function bandLine(view: View, ex: Extras, columns: number, offsetMin: number): Segment[] {
   const hasLimits = view.five !== undefined || view.week !== undefined || view.ctx !== undefined
-  const hasExtras = ex.cacheHit !== undefined || ex.delta !== undefined || ex.dist > 0
+  const hasExtras = ex.cacheHit !== undefined || ex.delta !== undefined || ex.tps !== undefined || ex.dist > 0
   if (!hasLimits && !hasExtras) return [{ text: 'limits: chờ lượt trả lời đầu tiên…', dim: true }]
 
   const [full, ...narrower] = TIERS as [Tier, ...Tier[]]
@@ -122,6 +139,8 @@ export function turnLine(t: LastTurn, history: readonly number[], cost: number |
     },
     { prio: 1, segs: [{ text: 'out ', dim: true }, { text: fmtTokens(t.output) }] },
   ]
+  const tps = tokPerSec(t.genOut, t.genMs)
+  if (tps !== undefined) parts.push({ prio: 2, segs: [{ text: fmtTps(tps), color: tpsColor(tps) }, { text: ' tok/s', dim: true }] })
   if (cost !== undefined) parts.push({ prio: 2, segs: [{ text: `~$${cost.toFixed(2)}` }] })
   if (t.model) parts.push({ prio: 4, segs: [{ text: shortModel(t.model), dim: true }] })
   if (history.length > 1) parts.push({ prio: 5, segs: [{ text: 'ctx ', dim: true }, { text: sparkline(history), color: 'cyan' }] })

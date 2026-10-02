@@ -161,3 +161,15 @@ describe('/usage-plus', () => {
     }
   })
 })
+
+describe('speed in the session tab', () => {
+  test('a turn row carries tok/s over its timed requests; none without a duration', async () => {
+    const turns = sessionTurns([
+      rec(T0, 'f1', 0, 1000, { output: 600, durationMs: 10_000 }),
+      rec(T0 + MIN, 'f1', 1000, 100, { output: 10, durationMs: 4_000 }),
+      rec(T0 + 2 * MIN, 'f2', 1100, 100),
+    ])
+    expect(turns[0]?.tps).toBe(60)
+    expect(turns[1]?.tps).toBeUndefined()
+  })
+})

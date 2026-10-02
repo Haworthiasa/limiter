@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'claude-code/testing'
 
 import type { LastTurn, View } from '../types'
-import { bandLine, cacheColor, deltaColor, deltaText, extrasOf, fmtTokens, sparkline, turnLine } from '../hooks/band'
+import { bandLine, cacheColor, deltaColor, deltaText, extrasOf, fmtTokens, sparkline, tpsColor, turnLine } from '../hooks/band'
 import { width } from '../hooks/limits'
 
 const T0 = Date.UTC(2026, 9, 2, 3, 0, 0)
@@ -93,5 +93,27 @@ describe('turn line', () => {
     const narrow = turnLine(last, hist, 0.42, 50).map(s => s.text).join('')
     expect(narrow).toContain('turn 4 req')
     expect(narrow).not.toContain('ctx')
+  })
+})
+
+describe('speed on the band', () => {
+  test('the last turn shows tok/s: extras and detail line', async () => {
+    const fast: LastTurn = { ...last, genOut: 2_000, genMs: 20_000 }
+    expect(extrasOf(fast, 0).tps).toBe(100)
+    const text = bandLine(view, extrasOf(fast, 0), 200, 420).map(s => s.text).join('')
+    expect(text).toContain('⚡ 100 tok/s')
+    expect(turnLine(fast, [], undefined, 200).map(s => s.text).join('')).toContain('100 tok/s')
+  })
+
+  test('no timed answer, no tok/s', async () => {
+    expect(extrasOf(last, 0).tps).toBeUndefined()
+    expect(bandLine(view, extrasOf(last, 0), 200, 420).map(s => s.text).join('')).not.toContain('tok/s')
+  })
+
+  test('colors: green from 60, yellow from 30, red below', async () => {
+    expect(tpsColor(60)).toBe('green')
+    expect(tpsColor(59)).toBe('yellow')
+    expect(tpsColor(30)).toBe('yellow')
+    expect(tpsColor(29)).toBe('red')
   })
 })

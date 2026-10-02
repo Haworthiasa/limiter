@@ -2,7 +2,7 @@
 // each segment into a Text and adds the tab buttons.
 
 import type { BustEvent } from '../types'
-import { cacheColor, fmtTokens, shortModel } from './band.ts'
+import { cacheColor, fmtTokens, fmtTps, shortModel, tpsColor } from './band.ts'
 import { columns, fit, hbar, spark, stacked } from './charts.ts'
 import type { DashData, DayRow, DistillSummary, Share } from './dashdata.ts'
 import { local } from './paths.ts'
@@ -263,7 +263,7 @@ function sessionTab(d: DashData, cols: number): Line[] {
   const total = turns.reduce((n, t) => n + t.cost, 0)
   const head: Line = [dim(`phiên này · ${turns.length} turn · ~${usd(total)} API-equiv`)]
   if (cols < 60) return [head, ...summaryOnly(d.days.slice(-1), 'hôm nay')]
-  const table: Line[] = [[dim('lúc    req  cache    Δctx   chi phí')]]
+  const table: Line[] = [[dim('lúc    req  cache    Δctx   chi phí  tok/s')]]
   for (const t of turns.slice(-10)) {
     table.push([
       plain(clock(t.ts, false).padEnd(6)),
@@ -271,6 +271,7 @@ function sessionTab(d: DashData, cols: number): Line[] {
       t.hit === undefined ? plain('      -') : { text: pct(t.hit).padStart(7), color: cacheColor(t.hit * 100) },
       plain((t.delta === undefined ? '-' : `${t.delta >= 0 ? '+' : '-'}${fmtTokens(Math.abs(t.delta))}`).padStart(8)),
       plain(`~${usd(t.cost)}`.padStart(10)),
+      t.tps === undefined ? plain('      -') : { text: fmtTps(t.tps).padStart(7), color: tpsColor(t.tps) },
     ])
   }
   const top = [...turns].sort((a, b) => b.cost - a.cost).slice(0, 3)

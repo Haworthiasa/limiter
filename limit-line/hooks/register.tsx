@@ -287,9 +287,13 @@ export const register: Register = on => {
 
   // One model request: its usage joins the turn's sums. Subagents' requests do not.
   on('turn.step', async function* ($, e, next) {
+    // The model's answer time: the clock before and after the request, tools not included.
+    const t0 = await $.clock.now().catch(() => undefined)
     const result = yield* next(e)
+    const t1 = await $.clock.now().catch(() => undefined)
+    const ms = t0 !== undefined && t1 !== undefined ? t1 - t0 : undefined
     try {
-      await update($, turnAcc, acc => addStep(acc, { turnId: e.turnId, agentId: e.agentId, usage: result.usage }))
+      await update($, turnAcc, acc => addStep(acc, { turnId: e.turnId, agentId: e.agentId, usage: result.usage, ...(ms !== undefined ? { ms } : {}) }))
     } catch {
       // The band misses one request; the turn goes on.
     }
@@ -303,6 +307,7 @@ export const register: Register = on => {
           project: basename(await $.session.cwd()),
           turnId: e.turnId,
           ...(e.agentId !== undefined ? { agentId: e.agentId } : {}),
+          ...(ms !== undefined ? { ms } : {}),
         })
         await update($, ledgerBuf, buf => [...buf, record])
       }

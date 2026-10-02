@@ -42,6 +42,22 @@ export function costOf(u: Usage, model: string, writeIs1h = LIVE_WRITE_IS_1H): n
   )
 }
 
+// ── Speed ──────────────────────────────────────────────────────────────────────────
+
+/** Answers shorter than this are mostly time-to-first-token, not writing: left out of tok/s. */
+export const TPS_MIN_OUT = 50
+
+/** Output tokens per second over timed requests; undefined when there is nothing to divide.
+ * Sum tokens and time first, then divide: a rate of sums, never a mean of rates. */
+export function tokPerSec(out: number | undefined, ms: number | undefined): number | undefined {
+  return out !== undefined && ms !== undefined && out > 0 && ms > 0 ? out / (ms / 1000) : undefined
+}
+
+/** Whether a request is long enough for its speed to mean something. */
+export function timeable(output: number, ms: number | undefined): ms is number {
+  return ms !== undefined && ms > 0 && output >= TPS_MIN_OUT
+}
+
 // ── Cache busts (PLAN §5) ──────────────────────────────────────────────────────────
 
 export const BUST_MIN_CTX = 20_000

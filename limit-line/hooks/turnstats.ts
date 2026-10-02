@@ -1,6 +1,7 @@
 // Sums the requests of one main-loop turn. Pure.
 
 import type { TurnAcc } from '../types'
+import { timeable } from './metrics.ts'
 
 export type StepUsage = {
   input_tokens: number
@@ -18,11 +19,12 @@ export function emptyTurn(turnId: string): TurnAcc {
  * a step of another turn starts the sum over. */
 export function addStep(
   acc: TurnAcc | null,
-  step: { turnId: string; agentId?: string; usage: StepUsage | null },
+  step: { turnId: string; agentId?: string; usage: StepUsage | null; ms?: number },
 ): TurnAcc | null {
   if (step.agentId !== undefined || step.usage === null) return acc
   const base = acc !== null && acc.turnId === step.turnId ? acc : emptyTurn(step.turnId)
   const u = step.usage
+  const timed = timeable(u.output_tokens, step.ms)
   return {
     turnId: base.turnId,
     requests: base.requests + 1,
@@ -31,6 +33,8 @@ export function addStep(
     cacheRead: base.cacheRead + u.cache_read_input_tokens,
     cacheWrite: base.cacheWrite + u.cache_creation_input_tokens,
     model: u.model,
+    genOut: (base.genOut ?? 0) + (timed ? u.output_tokens : 0),
+    genMs: (base.genMs ?? 0) + (timed ? (step.ms as number) : 0),
   }
 }
 

@@ -20,6 +20,9 @@ export type TurnAcc = {
   cacheWrite: number
   /** The model of the last request that counted. */
   model: string
+  /** Output tokens and answer time (ms) of the requests long enough to time: tok/s = genOut / genMs. */
+  genOut?: number
+  genMs?: number
 }
 
 /** A finished turn as the band's extras and detail line draw it. */
@@ -45,6 +48,8 @@ export type RequestRecord = {
   cacheWrite: number
   cacheWrite1h?: number
   turnId?: string
+  /** Time the model took to answer, ms; live records only. */
+  durationMs?: number
   isSubagent: boolean
   source: 'live' | 'jsonl'
 }
@@ -108,7 +113,7 @@ export type DayRow = {
   requests: number
 }
 export type Share = { name: string; tokens: number; share: number }
-export type TurnRow = { turnId: string; ts: number; requests: number; hit?: number; delta?: number; ctx: number; cost: number }
+export type TurnRow = { turnId: string; ts: number; requests: number; hit?: number; delta?: number; ctx: number; cost: number; tps?: number }
 export type DistillSummary = { count: number; cut: number; reread: number; byKind: { kind: string; n: number; cut: number }[] }
 export type LimitsHistory = {
   five: number[]

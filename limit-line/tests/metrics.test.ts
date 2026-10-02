@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'claude-code/testing'
 
-import { bustCause, cacheHit, costOf, ctxOf, elsewhereShare, isBust, nextTtl1h, savings, ttlMinutes } from '../hooks/metrics'
+import { bustCause, cacheHit, costOf, ctxOf, elsewhereShare, isBust, nextTtl1h, savings, timeable, tokPerSec, ttlMinutes } from '../hooks/metrics'
 import { priceOf } from '../hooks/pricing'
 
 // Floating point sums: equal to 1e-9.
@@ -73,5 +73,22 @@ describe('metrics', () => {
     // 0.5 $/% at best; 2 $ local is 4%, of 10% used: 60% elsewhere.
     expect(near(elsewhereShare(done, { pctUsed: 10, localCost: 2 }), 0.6)).toBe(true)
     expect(elsewhereShare(done, { pctUsed: 10, localCost: 6 })).toBe(0)
+  })
+})
+
+describe('speed', () => {
+  test('tok/s is output over seconds, undefined with nothing to divide', async () => {
+    expect(tokPerSec(600, 10_000)).toBe(60)
+    expect(tokPerSec(0, 10_000)).toBeUndefined()
+    expect(tokPerSec(600, 0)).toBeUndefined()
+    expect(tokPerSec(undefined, 10_000)).toBeUndefined()
+    expect(tokPerSec(600, undefined)).toBeUndefined()
+  })
+
+  test('short answers and untimed requests are not timeable', async () => {
+    expect(timeable(50, 1000)).toBe(true)
+    expect(timeable(49, 1000)).toBe(false)
+    expect(timeable(500, undefined)).toBe(false)
+    expect(timeable(500, 0)).toBe(false)
   })
 })
