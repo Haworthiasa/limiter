@@ -35,19 +35,29 @@ export function annotation(d: Distilled, logPath: string): string {
 /** Matches the annotation line back into its parts (the hook reads the wrapper's). */
 export const ANNOTATION = /\[distilled (\w+) (\d+)→(\d+) · full log: (.+?) · raw: rerun with NO_DISTILL=1\]\s*$/
 
-/** Commands whose failing output is worth distilling: wrapped before they run. */
+/** Commands whose failing output is worth distilling: wrapped before they run. Each pattern
+ * is matched at the start of a command segment (see `segments`), never inside an argument. */
 export const WRAP_ALLOWLIST: RegExp[] = [
-  /(^|[\s;&|(])(python3?|uv run|poetry run)?\s*-m pytest\b/,
-  /(^|[\s;&|(])pytest\b/,
-  /(^|[\s;&|(])(python3?|torchrun|accelerate launch|deepspeed)\s+\S*train\S*/,
-  /(^|[\s;&|(])docker(-compose| compose)? logs\b/,
-  /(^|[\s;&|(])(pip3?|uv pip) install\b/,
-  /(^|[\s;&|(])(make|ninja|cmake --build|cargo build|npm run build|pnpm build|yarn build)\b/,
-  /(^|[\s;&|(])python3? setup\.py (build|install|develop)\b/,
+  /^(python3? -m |uv run |poetry run )?pytest\b/,
+  /^(python3?|torchrun|accelerate launch|deepspeed)\s+\S*train\S*/,
+  /^docker(-compose| compose)? logs\b/,
+  /^(pip3?|uv pip) install\b/,
+  /^(make|ninja|cmake --build|cargo build|npm run build|pnpm( run)? build|yarn build)\b/,
+  /^python3? setup\.py (build|install|develop)\b/,
 ]
 
+/** The commands of a shell line: split at `;`, `&&`, `||`, `|`, `(` and newlines, quoted text
+ * removed first, leading `VAR=value` assignments dropped. */
+export function segments(command: string): string[] {
+  const unquoted = command.replace(/'[^']*'|"(?:[^"\\]|\\.)*"/g, "''")
+  return unquoted
+    .split(/;|&&|\|\||\||\(|\n/)
+    .map(seg => seg.trim().replace(/^(?:[A-Za-z_][A-Za-z0-9_]*=\S*\s+)+/, ''))
+    .filter(seg => seg.length > 0)
+}
+
 export function isWrapped(command: string): boolean {
-  return WRAP_ALLOWLIST.some(r => r.test(command))
+  return segments(command).some(seg => WRAP_ALLOWLIST.some(r => r.test(seg)))
 }
 
 /** Commands that pass through untouched. */

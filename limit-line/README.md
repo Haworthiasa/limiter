@@ -70,7 +70,7 @@ và `rm -rf <project>/.claude/distill`. Đọc lại lịch sử từ đầu: `n
 - Dấu compact và subagent trong JSONL chưa được xác minh trên dữ liệu thật (chưa có phiên nào như vậy).
 - Ước tính "ngoài máy này" chỉ hiện khi có ít nhất 2 cửa sổ 5h đầy đủ trong ledger.
 - Distiller mới có bộ lọc pytest và chung; cuda, docker, train để sau.
-- Cần `node` trong PATH (indexer và wrapper của distiller).
+- Cần `node` ≥ 23.6 trong PATH của Claude Code (indexer và wrapper của distiller chạy file `.ts` trực tiếp).
 
 ## Phát triển
 

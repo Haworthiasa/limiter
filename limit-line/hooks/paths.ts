@@ -44,10 +44,11 @@ export function shQuote(s: string): string {
 }
 
 /** The command run in place of `command`: its whole output to `log`, the CLI's distillation
- * printed, the original exit status kept. A missing node prints the log as it is. */
+ * printed, the original exit status kept. A missing node prints the log as it is.
+ * A subshell, so an `exit` or `set -e` inside the command cannot skip the printing. */
 export function wrapCommand(command: string, log: string, cli: string): string {
   const l = shQuote(log)
-  return `{ ${command}\n} > ${l} 2>&1; __ll_rc=$?; node ${shQuote(cli)} ${l} 2>/dev/null || cat ${l}; exit $__ll_rc`
+  return `( ${command}\n) > ${l} 2>&1; __ll_rc=$?; node ${shQuote(cli)} ${l} 2>/dev/null || cat ${l}; exit $__ll_rc`
 }
 
 /** Asia/Bangkok: the day boundary for ledgers and aggregates (PLAN §8). */
