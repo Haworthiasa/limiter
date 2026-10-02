@@ -32,13 +32,30 @@ persistedOutputSize?; structuredContent?`.
   copy must **drop `ref` and `text`**: `{ result: { ...r.result, stdout: distilled, stderr: '' } }`.
   Core then "validates a hook's answer against the tool's output schema … maps it for the
   model with the tool's own mapper".
-- **Open (check first thing in P2):** whether a hook may answer the `isError` arm with its own
-  shortened `result`. If not, failed commands (the most important ones for pytest/CUDA) can
-  only be distilled by answering a success-shaped result. That would change `isError`, which the
-  PLAN forbids, so they would pass through untouched.
-- Core already persists large output itself (`persistedOutputPath`, `persistedOutputSize`)
-  and shows the model a preview. The distiller runs above that: decide in P2 whether to read
-  the full file from `persistedOutputPath` when it is set.
+### Live probe (throwaway mod `ll-probe`, 2026-10-02, auto mode)
+
+| Case | What came back / what the model read |
+|---|---|
+| (a) 55 KB stdout, exit 0 | `result.stdout` cut to **30,000 chars**; `persistedOutputPath` = full file (56,896 B); `text` = `<persisted-output>` + **2 KB preview**, all the model reads |
+| (b) `exit 3` + stderr | `isError: true`; `result` is a **string** `"Error: Exit code 3\n<stdout>\n<stderr>"`; `text` = `"Exit code 3\n…"`. No separate stdout/stderr, no exit code field |
+| (c) success, hook returns `{ result: { ...r.result, stdout: 'SHORT', stderr: '' } }` | **Works**: the model read `SHORT` |
+| (d) error, hook returns `{ isError: true, result: 'SHORT' }` | **Refused**: `does not match its output shape: expected object, received string` |
+| (d2) error, hook returns `{ isError: true, result: { stdout: 'SHORT', … } }` | Accepted, but **reached the model as a success**: `isError` is lost |
+| (d3) error, hook returns `{ isError: true, result: r.result, text: 'SHORT' }` | **Refused** (same schema error) |
+| (e) `next({ ...e, command: wrapper })`, wrapper writes the full log to a file, prints a head, `exit $rc` | **Works**: `isError` kept, `Exit code 6` kept, the model read only the wrapper's output. No permission prompt and no auto-mode refusal for this wrapper |
+
+Conclusions for the distiller:
+- **Successful output:** rewrite the result (c). Above 30,000 chars, read the full text from
+  `persistedOutputPath`.
+- **Failed output cannot be shortened after the fact** (d, d2, d3). The only way is (e):
+  rewrite the command **before** it runs. The filter then has to run *inside the wrapper*, as a
+  Node script (Node 24 runs `.ts` with erasable syntax directly:
+  `node <plugin root>/hooks/distill/cli.ts`). The wrapper is used only for commands matching an
+  allowlist (pytest, `python *train*`, `docker logs`, `pip install`, build commands).
+- The rewrite happens above the permission check, so permission rules and auto mode see the
+  **wrapper**, not the original command. In a mode with allow rules (`Bash(pytest:*)`), the
+  wrapper no longer matches and will prompt. Keep the wrapper short and readable, and let the
+  original command appear verbatim inside it.
 - `$.tool.call` from a hook: "none [context] on a plugin's own `$.tool.call`". Not needed.
 
 ## `turn.step`, `turn.complete`

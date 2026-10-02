@@ -11,7 +11,7 @@ Mở rộng mod **limit-line** hiện có (một plugin Claude Code kiểu *mod*
 
 1. **Band v2**: dòng hạn mức phía trên ô prompt. Giữ `5h | wk | ctx` như hiện tại, thêm `▲Δctx`, `cache %`, `dist`, và một dòng chi tiết bật/tắt bằng nút `[+]`/`[-]`.
 2. **`/usage-plus`**: lệnh mở một pane dashboard với 3 tab Session / Week / Month. Pane hiển thị token theo loại, tỉ lệ cache hit, các lần cache bust kèm nguyên nhân, phân bổ theo model và project, lịch sử hạn mức, và thống kê distiller.
-3. **Distiller**: hook `tool.call` trên Bash. Khi output quá dài, nó chưng cất output trước khi Claude đọc, đồng thời luôn lưu bản đầy đủ ra file. Có bộ lọc riêng cho 4 loại log: **pytest, build CUDA, log API trong Docker, log train/SFT**.
+3. **Distiller**: hook `tool.call` trên Bash. Khi output quá dài, nó chưng cất output trước khi Claude đọc, đồng thời luôn lưu bản đầy đủ ra file. **Đợt này chỉ có bộ lọc pytest và generic**; cuda, docker, train/SFT để sau (xem mục "Để sau").
 
 Ngoài phạm vi (không làm): model router, cache warmer, codemode.
 
@@ -242,6 +242,12 @@ turn 4 req · in 61k (cache 55k · write 4k · new 2k) · out 2.3k · $0.42 · o
 
 ### P2 — Distiller (làm trước tầng dữ liệu)
 
+**Phạm vi đợt này:** bộ lọc `pytest` và `generic`. Giữ kiến trúc `detect.ts` cộng mỗi bộ lọc một file, để thêm `cuda`/`docker`/`train` sau mà không phải sửa pipeline. Không cài torch, không cần docker.
+
+**Hai đường, theo probe ở P0 (NOTES.md):**
+- **Lệnh thành công:** chạy bình thường, rồi thay `result.stdout` bằng bản đã lọc (`result.stderr: ''`), giữ các field khác. Trên 30.000 ký tự thì đọc bản đầy đủ từ `persistedOutputPath`.
+- **Lệnh lỗi:** core không nhận bản rút gọn của một kết quả `isError`. Vì vậy, với lệnh khớp allowlist (pytest, `python *train*`, `docker logs`, `pip install`, build), viết lại lệnh **trước khi chạy** thành wrapper: ghi output đầy đủ ra `.claude/distill/…log`, chạy `node <root>/hooks/distill/cli.ts` để in bản đã lọc, rồi `exit` đúng mã gốc. Lệnh không khớp allowlist mà lỗi thì đi thẳng, không lọc.
+
 **Luồng xử lý:**
 
 ```js
@@ -292,6 +298,8 @@ on('tool.call', { tool: 'Bash' }, async ($, e, next) => {
 
 **Test (`distill.test.ts`):**
 - Với mỗi fixture: (a) giảm ≥ 80% kích thước, (b) giữ đúng các bất biến trong bảng, (c) output đã lọc ≤ giới hạn, (d) có chú thích cuối.
+- Bộ lọc `generic`: **không mất dòng error/traceback nào trên mọi fixture hiện có** (chạy generic trên cả fixture pytest).
+- Wrapper: giữ đúng mã thoát gốc; output đầy đủ có trong file log.
 - Không đổi `isError`; lệnh có `NO_DISTILL=1` đi thẳng; output ngắn đi thẳng.
 - Hàm lọc ném lỗi thì trả về kết quả gốc.
 - Hiệu năng: fixture 4 MiB xử lý trong < 2 giây, đo bằng `performance.now`.
@@ -395,6 +403,14 @@ on('tool.call', { tool: 'Bash' }, async ($, e, next) => {
 5. Hỏi người dùng có muốn chép bản cuối về `D:\my-mods-limit-line` để Desktop (Windows) dùng chung không.
 
 ---
+
+## 6b. Để sau
+
+- Bộ lọc `cuda` (build CUDA / `cpp_extension`): cần fixture thật, cần torch + nvcc.
+- Bộ lọc `docker` (log API trong container): cần bật Docker Desktop WSL integration.
+- Bộ lọc `train` (train/SFT): chưa có log mẫu.
+
+Khi làm: thêm một file trong `hooks/distill/`, một nhánh trong `detect.ts`, fixture thật trong `tests/fixtures/<kind>/`, và các bất biến ở bảng bộ lọc phía trên.
 
 ## 7. Rủi ro và cách xử lý
 
